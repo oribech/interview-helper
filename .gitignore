@@ -5,7 +5,19 @@ __pycache__/
 dist/
 build/
 venv/
+.venv/
 .env
+
+# Logs
+*.log
+
+# Generated data
+poc/runs/
+poc/channel/poc/runs/
+
+# Model binaries & databases
+*.bin
+*.db
 
 # Node
 node_modules/

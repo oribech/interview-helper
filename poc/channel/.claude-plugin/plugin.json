@@ -1,0 +1,11 @@
+{
+  "name": "interview-sidecar",
+  "version": "0.0.1",
+  "description": "Local Claude Code channel for a live interview scratchpad PoC.",
+  "mcpServers": "./.mcp.json",
+  "channels": [
+    {
+      "server": "interview_sidecar"
+    }
+  ]
+}

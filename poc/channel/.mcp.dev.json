@@ -1,0 +1,12 @@
+{
+  "interview_sidecar": {
+    "command": "bun",
+    "args": ["run", "/Users/oribecher/Projects/interview-helper/poc/channel/src/channel.ts"],
+    "cwd": "/Users/oribecher/Projects/interview-helper/poc/channel",
+    "env": {
+      "INTERVIEW_PROJECT_ROOT": "/Users/oribecher/Projects/interview-helper",
+      "INTERVIEW_CHANNEL_PORT": "8788",
+      "INTERVIEW_TRACE_DIR": "/Users/oribecher/Projects/interview-helper/poc/runs"
+    }
+  }
+}

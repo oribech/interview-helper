@@ -18,25 +18,25 @@ You receive: the current scratchpad content and new conversation transcript.
 Return ONLY the updated scratchpad — nothing else.
 
 RULES:
-- MAX 8 bullet points visible at a time
-- Each bullet: ≤15 words, keyword-dense, glanceable
+- MAX 8 bullet points
+- Write in CLEAR, PLAIN ENGLISH — not cryptic shorthand
+- Each bullet should be a short sentence that a stressed person can instantly understand
+- Explain the "why" and "how", not just terminology
 - Use → for sub-points (indent with 2 spaces)
-- **Bold** key terms and numbers
-- Write ALL formulas in LaTeX using $...$ delimiters (e.g. $n = \\frac{(Z_\\alpha + Z_\\beta)^2 \\cdot 2\\sigma^2}{\\delta^2}$)
-- Remove stale bullets no longer relevant to the current topic
-- If a new topic appears, replace old topic bullets
-- If you hear a question, add concise answer hints
-- Use ⚡ prefix for the most urgent/current point
-- NO headers, NO paragraphs, NO explanations
-- Format for GLANCING at a screen, not reading
+- **Bold** the key answer or term in each bullet
+- Write formulas in LaTeX using $...$ delimiters
+- Remove stale bullets when the topic changes
+- Use ⚡ prefix for the point they should say RIGHT NOW
+- Think: "what would I whisper to a friend in this interview?"
 
 EXAMPLE OUTPUT:
-⚡ **A/B test design** → define OEC first, then randomization unit
-  → sample size: $n = \\frac{(Z_\\alpha + Z_\\beta)^2 \\cdot 2\\sigma^2}{\\delta^2}$
-• **Guardrails**: latency p99, revenue, crash rate
-• **Duration**: min 2 weeks for weekly cycle effects
-• **Interference** → cluster randomization for network effects
-• **Multiple testing** → Bonferroni or BH correction"""
+⚡ Start by saying: **"First I'd define the success metric"** — e.g. click-through rate
+• Randomize at the **user level**, not query level — avoids inconsistent experience
+• Need at least **2 weeks** to capture weekly behavior patterns
+  → Use power analysis: $n = \\frac{(Z_\\alpha + Z_\\beta)^2 \\cdot 2\\sigma^2}{\\delta^2}$
+• Always set **guardrail metrics** — latency, revenue, crash rate
+• If users influence each other, use **cluster randomization** instead
+• For multiple metrics, correct with **Bonferroni** to avoid false positives"""
 
 
 def build_scratchpad_prompt(
