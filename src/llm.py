@@ -1,7 +1,7 @@
-"""Claude CLI subprocess wrapper.
+"""Claude CLI subprocess wrapper — scratchpad mode.
 
-Sends prompts to Claude via the `claude` CLI command and returns responses.
-Supports both blocking and streaming modes.
+Sends the current scratchpad + transcript to Claude.
+Claude returns the full updated scratchpad.
 """
 
 import subprocess
@@ -9,122 +9,88 @@ import threading
 from typing import Callable, Optional
 
 
-SYSTEM_PROMPT = """You are a real-time interview answer assistant for a Data Science interview at Google.
-You hear the conversation transcript and must answer the detected question.
+SCRATCHPAD_PROMPT = """You maintain a real-time interview scratchpad for a Data Science candidate.
+You receive: the current scratchpad content and new conversation transcript.
+Return ONLY the updated scratchpad — nothing else.
 
-Rules:
-- Be concise: bullet points, key formulas, numbers
-- Max 150 words
-- Start with the direct answer, then supporting detail
-- Include specific examples when relevant
-- Use markdown formatting for readability
-- If wiki context is provided, reference it
+RULES:
+- MAX 8 bullet points visible at a time
+- Each bullet: ≤15 words, keyword-dense, glanceable
+- Use → for sub-points (indent with 2 spaces)
+- **Bold** key terms, formulas, numbers
+- Remove stale bullets no longer relevant to the current topic
+- If a new topic appears, replace old topic bullets
+- If you hear a question, add concise answer hints
+- Use ⚡ prefix for the most urgent/current point
+- NO headers, NO paragraphs, NO explanations
+- Format for GLANCING at a screen, not reading
 
-Format:
-**Answer:** [1-2 sentence direct answer]
-
-**Key Points:**
-- point 1
-- point 2
-- point 3
-
-**Example:** [brief concrete example if applicable]"""
+EXAMPLE OUTPUT:
+⚡ **A/B test design** → define OEC first, then randomization unit
+  → sample size: n = (Zα+Zβ)²·2σ²/δ²
+• **Guardrails**: latency p99, revenue, crash rate
+• **Duration**: min 2 weeks for weekly cycle effects
+• **Interference** → cluster randomization for network effects
+• **Multiple testing** → Bonferroni or BH correction"""
 
 
-def build_prompt(
-    question: str,
-    context: str,
+def build_scratchpad_prompt(
+    current_scratchpad: str,
+    transcript: str,
     wiki_context: Optional[str] = None,
 ) -> str:
-    """Build the full prompt for Claude."""
-
-    parts = [SYSTEM_PROMPT, ""]
+    """Build prompt for scratchpad update."""
+    parts = [SCRATCHPAD_PROMPT, ""]
 
     if wiki_context:
         parts.append(f"<wiki_context>\n{wiki_context}\n</wiki_context>\n")
 
-    parts.append(f"<transcript>\n{context}\n</transcript>\n")
-    parts.append(f"<question>\n{question}\n</question>")
+    parts.append(f"<current_scratchpad>\n{current_scratchpad or '(empty)'}\n</current_scratchpad>\n")
+    parts.append(f"<transcript>\n{transcript}\n</transcript>")
 
     return "\n".join(parts)
 
 
-def ask_claude_blocking(prompt: str, timeout: int = 30) -> str:
-    """
-    Send prompt to Claude CLI and return the full response.
-    Blocking call — waits for completion.
-    """
-    try:
-        result = subprocess.run(
-            ["claude", "-p", prompt],
-            capture_output=True,
-            text=True,
-            timeout=timeout,
-        )
-
-        if result.returncode != 0:
-            return f"[Claude error: {result.stderr.strip()}]"
-
-        return result.stdout.strip()
-
-    except subprocess.TimeoutExpired:
-        return "[Claude timeout — question may be too complex]"
-    except FileNotFoundError:
-        return "[Claude CLI not found — install with: npm install -g @anthropic-ai/claude-cli]"
-    except Exception as e:
-        return f"[Claude error: {e}]"
-
-
-def ask_claude_streaming(
+def update_scratchpad(
     prompt: str,
-    on_chunk: Callable[[str], None],
-    on_done: Optional[Callable[[], None]] = None,
-    timeout: int = 30,
-):
+    on_result: Callable[[str], None],
+    on_error: Optional[Callable[[str], None]] = None,
+    timeout: int = 20,
+) -> threading.Thread:
     """
-    Send prompt to Claude CLI and stream the response chunk by chunk.
-    Runs in a background thread.
-
-    Args:
-        prompt: full prompt text
-        on_chunk: called with each text chunk as it arrives
-        on_done: called when streaming is complete
-        timeout: max seconds to wait
+    Call Claude CLI to get the updated scratchpad.
+    Runs in a background thread. Calls on_result with the full new scratchpad.
     """
 
-    def _stream():
+    def _run():
         try:
-            proc = subprocess.Popen(
+            result = subprocess.run(
                 ["claude", "-p", prompt],
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
+                capture_output=True,
                 text=True,
+                timeout=timeout,
             )
 
-            buffer = ""
-            for char in iter(lambda: proc.stdout.read(1), ""):
-                buffer += char
-                # Flush on word boundaries or newlines
-                if char in (" ", "\n", "\t") or len(buffer) > 20:
-                    on_chunk(buffer)
-                    buffer = ""
+            if result.returncode != 0:
+                err = result.stderr.strip()
+                if on_error:
+                    on_error(f"Claude error: {err}")
+                return
 
-            # Flush remaining
-            if buffer:
-                on_chunk(buffer)
+            output = result.stdout.strip()
+            if output:
+                on_result(output)
 
-            proc.wait(timeout=timeout)
-
-            if proc.returncode != 0:
-                stderr = proc.stderr.read()
-                on_chunk(f"\n[Claude error: {stderr.strip()}]")
-
+        except subprocess.TimeoutExpired:
+            if on_error:
+                on_error("Claude timeout")
+        except FileNotFoundError:
+            if on_error:
+                on_error("Claude CLI not found")
         except Exception as e:
-            on_chunk(f"\n[Error: {e}]")
-        finally:
-            if on_done:
-                on_done()
+            if on_error:
+                on_error(str(e))
 
-    thread = threading.Thread(target=_stream, daemon=True)
+    thread = threading.Thread(target=_run, daemon=True)
     thread.start()
     return thread

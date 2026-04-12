@@ -246,3 +246,208 @@
 2026-04-12 20:15:16.774 - RealTimeSTT: realtimestt - INFO - Setting listen time
 2026-04-12 20:15:16.774 - RealTimeSTT: realtimestt - INFO - State changed from 'inactive' to 'listening'
 2026-04-12 20:15:16.774 - RealTimeSTT: realtimestt - DEBUG - Waiting for recording start
+2026-04-12 20:26:40.703 - RealTimeSTT: realtimestt - INFO - Starting RealTimeSTT
+2026-04-12 20:26:40.712 - RealTimeSTT: realtimestt - INFO - Initializing audio recording (creating pyAudio input stream, sample rate: 16000 buffer size: 512
+2026-04-12 20:26:40.716 - RealTimeSTT: realtimestt - INFO - Initializing faster_whisper realtime transcription model tiny, default device: cpu, compute type: default, device index: 0, download root: None
+2026-04-12 20:26:41.780 - RealTimeSTT: realtimestt - DEBUG - Faster_whisper realtime speech to text transcription model initialized successfully
+2026-04-12 20:26:41.780 - RealTimeSTT: realtimestt - INFO - Initializing WebRTC voice with Sensitivity 3
+2026-04-12 20:26:41.780 - RealTimeSTT: realtimestt - DEBUG - WebRTC VAD voice activity detection engine initialized successfully
+2026-04-12 20:26:43.222 - RealTimeSTT: realtimestt - DEBUG - Silero VAD voice activity detection engine initialized successfully
+2026-04-12 20:26:43.223 - RealTimeSTT: realtimestt - DEBUG - Starting realtime worker
+2026-04-12 20:26:43.223 - RealTimeSTT: realtimestt - DEBUG - Waiting for main transcription model to start
+2026-04-12 20:26:44.923 - RealTimeSTT: realtimestt - DEBUG - Main transcription model ready
+2026-04-12 20:26:44.923 - RealTimeSTT: realtimestt - DEBUG - RealtimeSTT initialization completed successfully
+2026-04-12 20:26:44.923 - RealTimeSTT: realtimestt - INFO - Setting listen time
+2026-04-12 20:26:44.924 - RealTimeSTT: realtimestt - INFO - State changed from 'inactive' to 'listening'
+2026-04-12 20:26:44.924 - RealTimeSTT: realtimestt - DEBUG - Waiting for recording start
+2026-04-12 20:27:30.523 - RealTimeSTT: realtimestt - INFO - voice activity detected
+2026-04-12 20:27:30.523 - RealTimeSTT: realtimestt - INFO - recording started
+2026-04-12 20:27:30.523 - RealTimeSTT: realtimestt - INFO - State changed from 'listening' to 'recording'
+2026-04-12 20:27:30.524 - RealTimeSTT: realtimestt - DEBUG - Waiting for recording stop
+2026-04-12 20:27:30.537 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 16896
+2026-04-12 20:27:30.696 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So...
+2026-04-12 20:27:30.738 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 19968
+2026-04-12 20:27:30.904 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So I have the
+2026-04-12 20:27:30.938 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 23040
+2026-04-12 20:27:31.104 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So I have a
+2026-04-12 20:27:31.139 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 26112
+2026-04-12 20:27:31.308 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So have a...
+2026-04-12 20:27:31.339 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 29184
+2026-04-12 20:27:31.515 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So have a...
+2026-04-12 20:27:31.540 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 32256
+2026-04-12 20:27:31.731 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So I have a...
+2026-04-12 20:27:32.125 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 42496
+2026-04-12 20:27:32.309 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So I have to...
+2026-04-12 20:27:32.326 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 45568
+2026-04-12 20:27:32.549 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So I have a... do-
+2026-04-12 20:27:32.550 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 48640
+2026-04-12 20:27:32.821 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So I have two feet.
+2026-04-12 20:27:32.821 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 52736
+2026-04-12 20:27:33.018 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So I have two free shirts.
+2026-04-12 20:27:33.022 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 55808
+2026-04-12 20:27:33.242 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So I have two features.
+2026-04-12 20:27:33.845 - RealTimeSTT: realtimestt - INFO - recording stopped
+2026-04-12 20:27:33.845 - RealTimeSTT: realtimestt - DEBUG - No samples removed, final audio length: 69632
+2026-04-12 20:27:33.845 - RealTimeSTT: realtimestt - INFO - State changed from 'recording' to 'inactive'
+2026-04-12 20:27:33.846 - RealTimeSTT: realtimestt - INFO - State changed from 'inactive' to 'transcribing'
+2026-04-12 20:27:33.846 - RealTimeSTT: realtimestt - DEBUG - Adding transcription request, no early transcription started
+2026-04-12 20:27:33.846 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:27:33.948 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:27:34.050 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:27:34.151 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:27:34.252 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:27:34.353 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:27:34.454 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:27:34.556 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:27:34.657 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:27:34.758 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:27:34.860 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:27:34.961 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:27:35.062 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:27:35.163 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:27:35.199 - RealTimeSTT: realtimestt - INFO - State changed from 'transcribing' to 'inactive'
+2026-04-12 20:27:35.199 - RealTimeSTT: realtimestt - DEBUG - Model small completed transcription in 1.35 seconds
+2026-04-12 20:27:35.201 - RealTimeSTT: realtimestt - INFO - Setting listen time
+2026-04-12 20:27:35.201 - RealTimeSTT: realtimestt - INFO - State changed from 'inactive' to 'listening'
+2026-04-12 20:27:35.201 - RealTimeSTT: realtimestt - DEBUG - Waiting for recording start
+2026-04-12 20:27:35.505 - RealTimeSTT: realtimestt - INFO - voice activity detected
+2026-04-12 20:27:35.505 - RealTimeSTT: realtimestt - INFO - recording started
+2026-04-12 20:27:35.505 - RealTimeSTT: realtimestt - INFO - State changed from 'listening' to 'recording'
+2026-04-12 20:27:35.505 - RealTimeSTT: realtimestt - DEBUG - Waiting for recording stop
+2026-04-12 20:27:35.512 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 16896
+2026-04-12 20:27:35.819 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  in a linear regression.
+2026-04-12 20:27:35.819 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 20992
+2026-04-12 20:27:36.005 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  in a linear regression.
+2026-04-12 20:27:36.019 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 24064
+2026-04-12 20:27:36.199 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  in a linear regression.
+2026-04-12 20:27:36.464 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 32256
+2026-04-12 20:27:36.651 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  in a linear regression.
+2026-04-12 20:27:36.664 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 35328
+2026-04-12 20:27:36.868 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  in a linear regression both.
+2026-04-12 20:27:36.869 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 38400
+2026-04-12 20:27:37.079 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  in a linear regression both have.
+2026-04-12 20:27:37.079 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 41472
+2026-04-12 20:27:37.296 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  in a linear regression both have
+2026-04-12 20:27:37.296 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 44544
+2026-04-12 20:27:37.516 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  in a linear regression both have
+2026-04-12 20:27:37.516 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 48640
+2026-04-12 20:27:37.728 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  in a linear regression both have
+2026-04-12 20:27:37.729 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 51712
+2026-04-12 20:27:37.936 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  in a linear regression both have
+2026-04-12 20:27:37.936 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 54784
+2026-04-12 20:27:38.145 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  in a linear regression both have very
+2026-04-12 20:27:38.145 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 58880
+2026-04-12 20:27:38.364 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  in a linear regression both have very
+2026-04-12 20:27:38.389 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 62976
+2026-04-12 20:27:38.674 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  in a linear regression both have very
+2026-04-12 20:27:38.674 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 67072
+2026-04-12 20:27:38.931 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  in a linear regression both have very high.
+2026-04-12 20:27:38.932 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 71168
+2026-04-12 20:27:39.162 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  in a linear regression both have very high p
+2026-04-12 20:27:39.162 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 74240
+2026-04-12 20:27:39.439 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  in a linear regression both have a very high p-thaw.
+2026-04-12 20:27:39.439 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 79360
+2026-04-12 20:27:39.718 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  in a linear regression both have very high p-value.
+2026-04-12 20:27:40.248 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 92672
+2026-04-12 20:27:40.558 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  in a linear regression both have very high p-value.
+2026-04-12 20:27:40.558 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 96768
+2026-04-12 20:27:40.834 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  in a linear regression both have a very high p-value.
+2026-04-12 20:27:40.837 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 101888
+2026-04-12 20:27:41.142 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  in a linear regression, both have very high p-value, like notes.
+2026-04-12 20:27:41.143 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 105984
+2026-04-12 20:27:41.465 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  in a linear regression both have very high p-value, like not significant.
+2026-04-12 20:27:41.466 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 111104
+2026-04-12 20:27:41.792 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  in a linear regression both have very high p-value, like not significant.
+2026-04-12 20:27:41.792 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 117248
+2026-04-12 20:27:42.113 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  in a linear regression both have very high p-value, like not significant.
+2026-04-12 20:27:42.113 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 122368
+2026-04-12 20:27:42.471 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  in a linear regression both have very high p-value, like not significant, but this...
+2026-04-12 20:27:42.471 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 127488
+2026-04-12 20:27:42.862 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  in a linear regression both have very high p-value, like not significant but despite
+2026-04-12 20:27:42.862 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 133632
+2026-04-12 20:27:43.295 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  in a linear regression both have very high p-value like not significant but despite
+2026-04-12 20:27:43.295 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 140800
+2026-04-12 20:27:43.777 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  in a linear regression both have very high p-value, like not significant but despite this
+2026-04-12 20:27:43.777 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 148992
+2026-04-12 20:27:44.171 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  in a linear regression both have very high p-value, like not significant, but despite these two...
+2026-04-12 20:27:44.346 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 158208
+2026-04-12 20:27:44.785 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  in a linear regression both have very high p-value, like not significant, but despite these two...
+2026-04-12 20:27:44.785 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 165376
+2026-04-12 20:27:45.217 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  in a linear regression both have very high p-value, like not significant, but despite these two...
+2026-04-12 20:27:45.217 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 171520
+2026-04-12 20:27:45.672 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  in a linear regression both have very high p-value, like not significant, but despite these two not significant.
+2026-04-12 20:27:45.673 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 178688
+2026-04-12 20:27:46.102 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  in a linear regression both have very high p-value, like not significant, but despite these two not significant.
+2026-04-12 20:27:46.204 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 187904
+2026-04-12 20:27:46.649 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  in a linear regression both have very high p-value, like not significant, but despite these two not significant.
+2026-04-12 20:27:46.649 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 195072
+2026-04-12 20:27:47.107 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  in a linear regression, both have very high p-value, like not significant, but despite these two not significant, the
+2026-04-12 20:27:47.108 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 202240
+2026-04-12 20:27:47.615 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  in a linear regression. Both have very high p-value, like not significant, but despite these two not significant, the R-square.
+2026-04-12 20:27:47.616 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 210432
+2026-04-12 20:27:48.112 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  in a linear regression both have very high p-value, like not significant, but despite these two not significant, the R squared is...
+2026-04-12 20:27:48.124 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 218624
+2026-04-12 20:27:48.638 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  in a linear regression both have very high p-value, like not significant, but despite these two not significant, the R squared is...
+2026-04-12 20:27:48.639 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 226816
+2026-04-12 20:27:49.155 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  in a linear regression, both have very high p-value, like not significant, but despite these two not significant, the R-squared is 85%.
+2026-04-12 20:27:49.156 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 235008
+2026-04-12 20:27:49.664 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  in a linear regression, both have very high p-value, like not significant, but despite these two not significant, the R-squared is 85%.
+2026-04-12 20:27:49.665 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 242176
+2026-04-12 20:27:50.223 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  in a linear regression both have very high p-value, like not significant, but despite these two not significant, the R-squared is 85%.
+2026-04-12 20:27:50.223 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 251392
+2026-04-12 20:27:50.777 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  in a linear regression both have very high p-value, like not significant, but despite these two not significant, the R-squared is 85% how come.
+2026-04-12 20:27:50.778 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 260608
+2026-04-12 20:27:51.419 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  in a linear regression both have very high p-value, like not significant, but despite these two not significant, the R-squared is 85% how come it
+2026-04-12 20:27:51.765 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 276992
+2026-04-12 20:27:52.305 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  in a linear regression both have very high p-value, like not significant, but despite these two not significant, the R-squared is 85% how come it
+2026-04-12 20:27:52.305 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 285184
+2026-04-12 20:27:52.882 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  in a linear regression both have very high p-value, like not significant, but despite these two not significant, the R-squared is 85% how come it
+2026-04-12 20:27:53.107 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 298496
+2026-04-12 20:27:53.762 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  in a linear regression. Both have very high p-value, like not significant, but despite these two not significant, the R-squared is 85%. How come it...
+2026-04-12 20:27:53.763 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 308736
+2026-04-12 20:27:54.316 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  in a linear regression. Both have very high p-value, like not significant, but despite these two not significant, the R-squared is 85%. How come you ask out?
+2026-04-12 20:27:54.847 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 326144
+2026-04-12 20:27:55.449 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  in a linear regression. Both have very high p-value, like not significant, but despite these two not significant, the R-squared is 85%. How come you ask how come?
+2026-04-12 20:27:55.805 - RealTimeSTT: realtimestt - INFO - recording stopped
+2026-04-12 20:27:55.807 - RealTimeSTT: realtimestt - DEBUG - No samples removed, final audio length: 340992
+2026-04-12 20:27:55.807 - RealTimeSTT: realtimestt - INFO - State changed from 'recording' to 'inactive'
+2026-04-12 20:27:55.807 - RealTimeSTT: realtimestt - INFO - State changed from 'inactive' to 'transcribing'
+2026-04-12 20:27:55.807 - RealTimeSTT: realtimestt - DEBUG - Adding transcription request, no early transcription started
+2026-04-12 20:27:55.822 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:27:55.923 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:27:56.024 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:27:56.126 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:27:56.227 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:27:56.327 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:27:56.428 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:27:56.530 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:27:56.631 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:27:56.732 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:27:56.833 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:27:56.934 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:27:57.036 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:27:57.137 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:27:57.239 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:27:57.340 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:27:57.442 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:27:57.543 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:27:57.645 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:27:57.746 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:27:57.847 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:27:57.949 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:27:58.050 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:27:58.151 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:27:58.252 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:27:58.354 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:27:58.456 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:27:58.557 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:27:58.659 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:27:58.760 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:27:58.861 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:27:58.962 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:27:59.064 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:27:59.107 - RealTimeSTT: realtimestt - INFO - State changed from 'transcribing' to 'inactive'
+2026-04-12 20:27:59.109 - RealTimeSTT: realtimestt - DEBUG - Model small completed transcription in 3.30 seconds
+2026-04-12 20:27:59.112 - RealTimeSTT: realtimestt - INFO - Setting listen time
+2026-04-12 20:27:59.113 - RealTimeSTT: realtimestt - INFO - State changed from 'inactive' to 'listening'
+2026-04-12 20:27:59.113 - RealTimeSTT: realtimestt - DEBUG - Waiting for recording start

@@ -1,57 +1,75 @@
-"""Orchestrator — starts all components.
+"""Orchestrator — starts all components (scratchpad mode).
 
 Usage:
     uv run python main.py [--port 8888] [--model small]
 
-Components started:
-    1. Display server (HTTP + WebSocket on port 8888)
-    2. Audio transcriber (mic → text)
-    3. Brain (question detection → Claude → display)
+Flow:
+    Audio → Brain (accumulate, debounce) → Claude (update scratchpad) → Display
 """
 
 import argparse
 import asyncio
-import signal
 import sys
 
 from src.audio import AudioTranscriber
 from src.brain import Brain
 from src.display import (
-    send_answer_chunk,
-    send_answer_done,
-    send_question,
+    send_error,
+    send_scratchpad,
     send_transcript,
+    send_updating,
     start_server,
 )
-from src.llm import ask_claude_streaming, build_prompt
+from src.llm import build_scratchpad_prompt, update_scratchpad
 from src.wiki_search import search_wiki
+
+
+# Server-side scratchpad state
+_current_scratchpad: str = ""
 
 
 def main():
     parser = argparse.ArgumentParser(description="Real-Time AI Interview Helper")
-    parser.add_argument("--port", type=int, default=8888, help="Server port (default: 8888)")
-    parser.add_argument("--model", type=str, default="small", help="Whisper model (tiny/base/small/medium/large)")
-    parser.add_argument("--language", type=str, default="en", help="Language code (default: en)")
+    parser.add_argument("--port", type=int, default=8888, help="Server port")
+    parser.add_argument("--model", type=str, default="small", help="Whisper model size")
+    parser.add_argument("--language", type=str, default="en", help="Language code")
     args = parser.parse_args()
 
-    # --- Callbacks wired together ---
+    # --- Callbacks ---
 
-    def on_question_detected(question: str, context: str):
-        """Brain detected a question → search wiki → ask Claude → stream to display."""
-        # 1. Notify display
-        send_question(question)
+    def on_brain_update(new_text: str, full_context: str):
+        """Brain has new transcript → ask Claude to update scratchpad."""
+        global _current_scratchpad
 
-        # 2. Search wiki for relevant context
-        wiki_context = search_wiki(question)
+        brain.set_busy(True)
+        send_updating()
 
-        # 3. Build prompt
-        prompt = build_prompt(question, context, wiki_context or None)
+        # Search wiki for relevant context
+        wiki_context = search_wiki(new_text)
 
-        # 4. Stream Claude's answer to display
-        ask_claude_streaming(
+        # Build prompt
+        prompt = build_scratchpad_prompt(
+            current_scratchpad=_current_scratchpad,
+            transcript=full_context,
+            wiki_context=wiki_context or None,
+        )
+
+        def on_result(new_pad: str):
+            global _current_scratchpad
+            _current_scratchpad = new_pad
+            send_scratchpad(new_pad)
+            brain.set_busy(False)
+            print(f"[Main] Scratchpad updated ({len(new_pad)} chars)")
+
+        def on_llm_error(err: str):
+            send_error(err)
+            brain.set_busy(False)
+            print(f"[Main] LLM error: {err}")
+
+        update_scratchpad(
             prompt=prompt,
-            on_chunk=send_answer_chunk,
-            on_done=send_answer_done,
+            on_result=on_result,
+            on_error=on_llm_error,
         )
 
     def on_transcript(text: str):
@@ -62,9 +80,12 @@ def main():
         """Partial transcript → update ticker on display."""
         send_transcript(text)
 
-    # --- Initialize components ---
+    # --- Components ---
 
-    brain = Brain(on_question=on_question_detected)
+    brain = Brain(
+        on_update=on_brain_update,
+        min_interval_seconds=3.0,
+    )
 
     audio = AudioTranscriber(
         on_text=on_transcript,
@@ -76,19 +97,15 @@ def main():
     # --- Run ---
 
     async def run():
-        # Start web server
         runner = await start_server(port=args.port)
-
-        # Start audio in background thread
         audio.start()
 
         print(f"\n{'='*50}")
-        print(f"  Interview Helper is LIVE")
+        print(f"  Interview Helper — SCRATCHPAD MODE")
         print(f"  Open: http://localhost:{args.port}")
         print(f"  Model: {args.model} | Language: {args.language}")
         print(f"{'='*50}\n")
 
-        # Keep running
         try:
             while True:
                 await asyncio.sleep(1)
@@ -99,7 +116,6 @@ def main():
             await runner.cleanup()
             print("\n[Main] Shutdown complete.")
 
-    # Handle Ctrl+C gracefully
     try:
         asyncio.run(run())
     except KeyboardInterrupt:
