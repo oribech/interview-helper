@@ -10,6 +10,7 @@ Flow:
 import argparse
 import asyncio
 import sys
+import time
 
 from src.audio import AudioTranscriber
 from src.brain import Brain
@@ -19,10 +20,11 @@ from src.display import (
     send_scratchpad,
     send_transcript,
     send_updating,
+    set_on_stt_change,
     start_server,
 )
 from src.llm import build_scratchpad_prompt, update_scratchpad
-from src.wiki_search import search_wiki
+
 
 
 # Server-side scratchpad state
@@ -42,32 +44,36 @@ def main():
         """Brain has new transcript → ask Claude to update scratchpad."""
         global _current_scratchpad
 
+        t_start = time.perf_counter()
         brain.set_busy(True)
         send_updating()
 
-        # Search wiki for relevant context
-        wiki_context = search_wiki(new_text)
-
         # Build prompt
+        t_prompt = time.perf_counter()
         prompt = build_scratchpad_prompt(
             current_scratchpad=_current_scratchpad,
             transcript=full_context,
-            wiki_context=wiki_context or None,
         )
+        print(f"[Timing] Prompt build: {(time.perf_counter() - t_prompt)*1000:.0f}ms  (prompt length: {len(prompt)} chars)")
 
         def on_result(new_pad: str):
             global _current_scratchpad
+            t_total = (time.perf_counter() - t_start) * 1000
             _current_scratchpad = new_pad
             send_scratchpad(new_pad)
             brain.set_busy(False)
+            print(f"[Timing] Total brain→result: {t_total:.0f}ms")
             print(f"[Main] Scratchpad updated ({len(new_pad)} chars)")
 
         def on_llm_error(err: str):
+            t_total = (time.perf_counter() - t_start) * 1000
             send_error(err)
             brain.set_busy(False)
+            print(f"[Timing] Total brain→error: {t_total:.0f}ms")
             print(f"[Main] LLM error: {err}")
 
         settings = get_settings()
+        print(f"[Timing] Settings: model={settings['model']}, effort={settings['effort']}")
         update_scratchpad(
             prompt=prompt,
             on_result=on_result,
@@ -102,6 +108,7 @@ def main():
 
     async def run():
         runner = await start_server(port=args.port)
+        set_on_stt_change(lambda model: audio.change_model(model))
         audio.start()
 
         print(f"\n{'='*50}")

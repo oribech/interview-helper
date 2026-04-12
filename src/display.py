@@ -18,6 +18,10 @@ _loop = None
 
 # Current settings (updated by client dropdowns)
 _settings: dict = {"model": "claude-sonnet-4-6", "effort": "medium"}
+_stt_settings: dict = {"stt_model": "small"}
+
+# External callback for STT model changes
+_on_stt_change = None
 
 # External callback for settings changes
 _on_settings_change = None
@@ -243,11 +247,28 @@ body {
     </div>
     <div class="controls">
         <div class="control-group">
+            <label>STT</label>
+            <select id="sttSelect">
+                <option value="tiny">Tiny</option>
+                <option value="base">Base</option>
+                <option value="small" selected>Small</option>
+                <option value="medium">Medium</option>
+                <option value="large-v2">Large</option>
+            </select>
+        </div>
+        <div class="control-group">
             <label>Model</label>
             <select id="modelSelect">
-                <option value="claude-sonnet-4-6">Sonnet 4.6</option>
-                <option value="claude-opus-4-6">Opus 4.6</option>
-                <option value="claude-haiku-4-5-20251001">Haiku 4.5</option>
+                <optgroup label="Claude">
+                    <option value="claude-sonnet-4-6">Sonnet 4.6</option>
+                    <option value="claude-opus-4-6">Opus 4.6</option>
+                    <option value="claude-haiku-4-5-20251001">Haiku 4.5</option>
+                </optgroup>
+                <optgroup label="Gemini">
+                    <option value="gemini-3.1-flash-lite-preview">Gemini 3.1 Flash Lite</option>
+                    <option value="gemini-3-flash-preview">Gemini 3 Flash</option>
+                    <option value="gemini-3.1-pro-preview">Gemini 3.1 Pro</option>
+                </optgroup>
             </select>
         </div>
         <div class="control-group">
@@ -283,16 +304,27 @@ const transcriptText = document.getElementById('transcriptText');
 const statusText = document.getElementById('statusText');
 const modelSelect = document.getElementById('modelSelect');
 const effortSelect = document.getElementById('effortSelect');
+const sttSelect = document.getElementById('sttSelect');
 
 let previousLines = [];
 
-// Send settings changes to server
-modelSelect.addEventListener('change', () => {
+const effortGroup = effortSelect.parentElement;
+
+function sendSettings() {
     ws.send(JSON.stringify({type: 'settings', model: modelSelect.value, effort: effortSelect.value}));
+}
+
+function updateEffortVisibility() {
+    const isGemini = modelSelect.value.startsWith('gemini');
+    effortGroup.style.display = isGemini ? 'none' : 'flex';
+}
+
+modelSelect.addEventListener('change', () => { updateEffortVisibility(); sendSettings(); });
+effortSelect.addEventListener('change', sendSettings);
+sttSelect.addEventListener('change', () => {
+    ws.send(JSON.stringify({type: 'stt_settings', stt_model: sttSelect.value}));
 });
-effortSelect.addEventListener('change', () => {
-    ws.send(JSON.stringify({type: 'settings', model: modelSelect.value, effort: effortSelect.value}));
-});
+updateEffortVisibility();
 
 ws.onopen = () => {
     statusText.textContent = 'Connected';
@@ -407,6 +439,13 @@ async def _websocket_handler(request):
                         print(f"[Display] Settings updated: model={_settings['model']}, effort={_settings['effort']}")
                         if _on_settings_change:
                             _on_settings_change(_settings.copy())
+                    elif data.get("type") == "stt_settings":
+                        new_stt = data.get("stt_model", _stt_settings["stt_model"])
+                        if new_stt != _stt_settings["stt_model"]:
+                            _stt_settings["stt_model"] = new_stt
+                            print(f"[Display] STT model updated: {new_stt}")
+                            if _on_stt_change:
+                                _on_stt_change(new_stt)
                 except json.JSONDecodeError:
                     pass
     finally:
@@ -473,13 +512,21 @@ def set_on_settings_change(callback):
     _on_settings_change = callback
 
 
+def set_on_stt_change(callback):
+    """Register a callback for when the user changes the STT model."""
+    global _on_stt_change
+    _on_stt_change = callback
+
+
 def reset():
     """Reset module state — useful between tests."""
-    global _loop, _on_settings_change
+    global _loop, _on_settings_change, _on_stt_change
     _clients.clear()
     _loop = None
     _on_settings_change = None
+    _on_stt_change = None
     _settings.update({"model": "claude-sonnet-4-6", "effort": "medium"})
+    _stt_settings.update({"stt_model": "small"})
 
 
 async def start_server(host: str = "0.0.0.0", port: int = 8888):

@@ -1,11 +1,12 @@
-"""Claude CLI subprocess wrapper — scratchpad mode.
+"""LLM subprocess wrapper — scratchpad mode.
 
-Sends the current scratchpad + transcript to Claude.
-Claude returns the full updated scratchpad.
+Sends the current scratchpad + transcript to an LLM (Claude or Gemini CLI).
+Returns the full updated scratchpad.
 """
 
 import subprocess
 import threading
+import time
 from typing import Callable, Optional
 
 
@@ -38,16 +39,14 @@ EXAMPLE OUTPUT:
 def build_scratchpad_prompt(
     current_scratchpad: str,
     transcript: str,
-    wiki_context: Optional[str] = None,
 ) -> str:
     """Build prompt for scratchpad update."""
-    parts = [SCRATCHPAD_PROMPT, ""]
-
-    if wiki_context:
-        parts.append(f"<wiki_context>\n{wiki_context}\n</wiki_context>\n")
-
-    parts.append(f"<current_scratchpad>\n{current_scratchpad or '(empty)'}\n</current_scratchpad>\n")
-    parts.append(f"<transcript>\n{transcript}\n</transcript>")
+    parts = [
+        SCRATCHPAD_PROMPT,
+        "",
+        f"<current_scratchpad>\n{current_scratchpad or '(empty)'}\n</current_scratchpad>\n",
+        f"<transcript>\n{transcript}\n</transcript>",
+    ]
 
     return "\n".join(parts)
 
@@ -65,22 +64,34 @@ def update_scratchpad(
     Runs in a background thread. Calls on_result with the full new scratchpad.
     """
 
+    is_gemini = model.startswith("gemini")
+
     def _run():
         try:
-            cmd = ["claude", "-p", prompt, "--model", model]
-            if effort in ("low", "high"):
-                cmd += ["--effort", effort]
+            if is_gemini:
+                cmd = ["gemini", "-m", model]
+            else:
+                cmd = ["claude", "-p", prompt, "--model", model]
+                if effort in ("low", "high"):
+                    cmd += ["--effort", effort]
+
+            provider = "Gemini" if is_gemini else "Claude"
+            print(f"[Timing] LLM subprocess starting: {provider} model={model} (prompt {len(prompt)} chars)")
+            t0 = time.perf_counter()
             result = subprocess.run(
                 cmd,
+                input=prompt if is_gemini else None,
                 capture_output=True,
                 text=True,
                 timeout=timeout,
             )
+            elapsed = (time.perf_counter() - t0) * 1000
+            print(f"[Timing] LLM subprocess finished: {elapsed:.0f}ms (returncode={result.returncode})")
 
             if result.returncode != 0:
                 err = result.stderr.strip()
                 if on_error:
-                    on_error(f"Claude error: {err}")
+                    on_error(f"{provider} error: {err}")
                 return
 
             output = result.stdout.strip()
@@ -89,10 +100,10 @@ def update_scratchpad(
 
         except subprocess.TimeoutExpired:
             if on_error:
-                on_error("Claude timeout")
+                on_error(f"{provider} timeout")
         except FileNotFoundError:
             if on_error:
-                on_error("Claude CLI not found")
+                on_error(f"{provider} CLI not found — install with: {'brew install gemini-cli' if is_gemini else 'npm install -g @anthropic-ai/claude-code'}")
         except Exception as e:
             if on_error:
                 on_error(str(e))

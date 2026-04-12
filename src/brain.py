@@ -63,7 +63,9 @@ class Brain:
 
         context = self.get_context()
         self._last_trigger_time = now
+        time_since_chunk = time.time() - now  # time spent in add_text before trigger
         print(f"[Brain] Triggering update: {text[:60]}...")
+        print(f"[Timing] Brain overhead before trigger: {time_since_chunk*1000:.0f}ms | context length: {len(context)} chars | chunks: {len(self._chunks)}")
         self.on_update(text.strip(), context)
 
     def set_busy(self, busy: bool):

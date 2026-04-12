@@ -5,6 +5,7 @@ Uses RealtimeSTT with faster-whisper for local, low-latency transcription.
 """
 
 import threading
+import time
 from typing import Callable, Optional
 
 
@@ -58,8 +59,11 @@ class AudioTranscriber:
         """Blocking loop that feeds transcriptions to callback."""
         while self._running:
             try:
+                t0 = time.perf_counter()
                 text = self.recorder.text()
+                elapsed = (time.perf_counter() - t0) * 1000
                 if text and text.strip():
+                    print(f"[Timing] Audio STT: {elapsed:.0f}ms for '{text.strip()[:50]}'")
                     self.on_text(text.strip())
             except Exception as e:
                 print(f"[Audio] Error: {e}")
@@ -68,6 +72,17 @@ class AudioTranscriber:
         """Forward realtime partial text."""
         if self.on_realtime_text and text and text.strip():
             self.on_realtime_text(text.strip())
+
+    def change_model(self, new_model: str):
+        """Change the whisper model at runtime by restarting the recorder."""
+        if new_model == self.model:
+            return
+        print(f"[Audio] Switching model: {self.model} → {new_model}")
+        self.model = new_model
+        self.stop()
+        import time
+        time.sleep(0.5)
+        self.start()
 
     def stop(self):
         """Stop listening."""
