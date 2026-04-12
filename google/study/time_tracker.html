@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Study Time Tracker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg-start: #0a0a1a;
+      --bg-end: #10102a;
+      --glass: rgba(255,255,255,0.04);
+      --glass-border: rgba(255,255,255,0.08);
+      --glass-hover: rgba(255,255,255,0.07);
+      --accent: #818cf8;
+      --accent-dim: #6366f1;
+      --success: #34d399;
+      --success-dark: #059669;
+      --danger: #f87171;
+      --danger-dark: #dc2626;
+      --warning: #fbbf24;
+      --warning-dark: #d97706;
+      --text: #e2e8f0;
+      --text2: #94a3b8;
+      --text3: #475569;
+      --mono: 'JetBrains Mono', monospace;
+      --sans: 'Inter', system-ui, sans-serif;
+      --r: 16px;
+    }
+
+    body {
+      font-family: var(--sans);
+      background: linear-gradient(160deg, var(--bg-start), var(--bg-end));
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 2.5rem 1rem 4rem;
+    }
+
+    .wrap { max-width: 700px; width: 100%; }
+
+    /* -- header -- */
+    header { text-align: center; margin-bottom: 2rem; }
+    header h1 { font-size: 1.4rem; font-weight: 600; letter-spacing: -0.02em; }
+    header p { font-size: 0.78rem; color: var(--text3); margin-top: 0.3rem; }
+
+    /* -- glass card -- */
+    .glass {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--r);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    /* -- timer -- */
+    .timer-card {
+      text-align: center;
+      padding: 2.5rem 2rem 2rem;
+      margin-bottom: 1.25rem;
+      animation: fadeUp .45s ease-out;
+    }
+
+    .timer-display {
+      font-family: var(--mono);
+      font-size: 3.8rem;
+      font-weight: 500;
+      letter-spacing: .06em;
+      color: var(--text3);
+      transition: color .35s, text-shadow .35s;
+      line-height: 1.1;
+    }
+    .timer-display.active {
+      color: var(--accent);
+      text-shadow: 0 0 40px rgba(129,140,248,.25);
+    }
+    .timer-display.warning {
+      color: var(--warning);
+      text-shadow: 0 0 40px rgba(251,191,36,.25);
+    }
+    .timer-display.overtime {
+      color: var(--danger);
+      text-shadow: 0 0 40px rgba(248,113,113,.25);
+    }
+    .timer-display.paused {
+      color: var(--text2);
+      text-shadow: 0 0 24px rgba(148,163,184,.12);
+    }
+
+    .status-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .45rem;
+      margin: .6rem 0 1.2rem;
+      font-size: .72rem;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--text3);
+    }
+    .dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--text3);
+      transition: background .3s;
+    }
+    .dot.on {
+      background: var(--success);
+      animation: pulse 1.6s ease-in-out infinite;
+    }
+    .dot.hold {
+      background: var(--warning);
+      animation: none;
+    }
+    @keyframes pulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(52,211,153,.45); }
+      50%     { box-shadow: 0 0 0 6px rgba(52,211,153,0); }
+    }
+
+    /* -- custom time input -- */
+    .time-setter {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .6rem;
+      margin-bottom: 1rem;
+    }
+    .time-input {
+      width: 80px;
+      padding: .6rem .8rem;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 1.1rem;
+      font-weight: 500;
+      text-align: center;
+      outline: none;
+      transition: border-color .2s;
+      -moz-appearance: textfield;
+    }
+    .time-input::-webkit-outer-spin-button,
+    .time-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .time-input:focus { border-color: var(--accent); }
+    .time-input::placeholder { color: var(--text3); font-size: .85rem; }
+    .time-input-label {
+      font-size: .8rem;
+      color: var(--text3);
+    }
+
+    /* -- preset buttons -- */
+    .presets {
+      display: flex;
+      justify-content: center;
+      gap: .6rem;
+      margin-bottom: 1.4rem;
+      flex-wrap: wrap;
+    }
+    .preset-btn {
+      padding: .5rem 1.2rem;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 8px;
+      color: var(--text2);
+      font-family: var(--sans);
+      font-size: .82rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background .2s, border-color .2s, color .2s;
+    }
+    .preset-btn:hover {
+      background: rgba(129,140,248,.15);
+      border-color: var(--accent-dim);
+      color: var(--accent);
+    }
+    .preset-btn.selected {
+      background: rgba(129,140,248,.2);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .field-block {
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto 1rem;
+      text-align: left;
+    }
+    .field-label {
+      font-size: .68rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--text3);
+      margin-bottom: .45rem;
+    }
+    .field-input {
+      width: 100%;
+      padding: .7rem 1rem;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: .88rem;
+      outline: none;
+      transition: border-color .2s, opacity .2s;
+    }
+    .field-input:focus { border-color: var(--accent-dim); }
+    .field-input::placeholder { color: var(--text3); }
+    .field-input:disabled {
+      opacity: .7;
+      cursor: not-allowed;
+    }
+    .is-hidden { display: none; }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      gap: .75rem;
+      flex-wrap: wrap;
+      margin-top: .4rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: .5rem;
+      padding: .8rem 2.4rem;
+      border: none;
+      border-radius: 50px;
+      font-family: var(--sans);
+      font-size: .92rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform .15s, box-shadow .25s;
+      letter-spacing: .01em;
+      min-width: 148px;
+    }
+    .btn:hover  { transform: translateY(-2px); }
+    .btn:active { transform: translateY(0); }
+
+    .btn-go {
+      background: linear-gradient(135deg, var(--success), var(--success-dark));
+      color: #fff;
+      box-shadow: 0 4px 18px rgba(52,211,153,.3);
+    }
+    .btn-go:hover { box-shadow: 0 6px 24px rgba(52,211,153,.4); }
+
+    .btn-stop {
+      background: linear-gradient(135deg, var(--danger), var(--danger-dark));
+      color: #fff;
+      box-shadow: 0 4px 18px rgba(248,113,113,.3);
+    }
+    .btn-stop:hover { box-shadow: 0 6px 24px rgba(248,113,113,.4); }
+
+    .btn-hold {
+      background: linear-gradient(135deg, var(--warning), var(--warning-dark));
+      color: #fff;
+      box-shadow: 0 4px 18px rgba(251,191,36,.28);
+    }
+    .btn-hold:hover { box-shadow: 0 6px 24px rgba(251,191,36,.38); }
+
+    .btn-reset {
+      background: rgba(255,255,255,.07);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: none;
+    }
+    .btn-reset:hover { box-shadow: 0 6px 18px rgba(15,23,42,.18); }
+
+    /* -- stats -- */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      animation: fadeUp .45s ease-out .08s both;
+    }
+    .stat {
+      padding: 1.15rem .75rem;
+      text-align: center;
+      transition: background .2s;
+    }
+    .stat:hover { background: var(--glass-hover); }
+    .stat-label {
+      font-size: .68rem;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--text3);
+      margin-bottom: .4rem;
+    }
+    .stat-val {
+      font-family: var(--mono);
+      font-size: 1.45rem;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    /* -- entries -- */
+    .entries { animation: fadeUp .45s ease-out .16s both; }
+    .entries h2 {
+      font-size: .88rem;
+      font-weight: 500;
+      color: var(--text2);
+      margin-bottom: .65rem;
+      padding-left: .15rem;
+    }
+    .entries-card { overflow: hidden; }
+
+    table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+    th {
+      text-align: left;
+      padding: .7rem 1rem;
+      font-size: .68rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--text3);
+      font-weight: 500;
+      border-bottom: 1px solid var(--glass-border);
+    }
+    td {
+      padding: .6rem 1rem;
+      color: var(--text2);
+      border-bottom: 1px solid rgba(255,255,255,.03);
+      vertical-align: top;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255,255,255,.02); }
+    .dur { font-family: var(--mono); color: var(--accent); font-size: .8rem; }
+    .empty {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text3);
+      font-size: .84rem;
+    }
+    .notes-cell {
+      max-width: 260px;
+      white-space: normal;
+      line-height: 1.45;
+    }
+    .note-line + .note-line { margin-top: .25rem; }
+    .note-tag {
+      color: var(--text3);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      font-size: .65rem;
+      margin-right: .35rem;
+    }
+    .table-btn {
+      padding: .4rem .8rem;
+      background: rgba(129,140,248,.12);
+      border: 1px solid rgba(129,140,248,.22);
+      border-radius: 999px;
+      color: var(--accent);
+      font-size: .74rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .table-btn:hover {
+      background: rgba(129,140,248,.18);
+      border-color: rgba(129,140,248,.35);
+    }
+    .table-btn:disabled {
+      opacity: .45;
+      cursor: not-allowed;
+    }
+    .action-cell { width: 90px; }
+
+    .edit-card {
+      margin-top: 1rem;
+      padding: 1.25rem;
+    }
+    .edit-card h3 {
+      font-size: .88rem;
+      font-weight: 600;
+      color: var(--text2);
+      margin-bottom: 1rem;
+    }
+    .edit-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: .9rem 1rem;
+    }
+    .edit-grid .field-block {
+      max-width: none;
+      margin-bottom: 0;
+    }
+    .edit-grid .field-block.wide {
+      grid-column: 1 / -1;
+    }
+
+    @media (max-width: 640px) {
+      .edit-grid {
+        grid-template-columns: 1fr;
+      }
+      .edit-grid .field-block.wide {
+        grid-column: auto;
+      }
+    }
+
+    /* -- footer hint -- */
+    .hint {
+      text-align: center;
+      margin-top: 1.5rem;
+      font-size: .7rem;
+      color: var(--text3);
+      animation: fadeUp .45s ease-out .24s both;
+    }
+    kbd {
+      display: inline-block;
+      padding: .1em .45em;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 4px;
+      font-family: var(--mono);
+      font-size: .72rem;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Study Timer</h1>
+      <p>Track your study sessions</p>
+    </header>
+
+    <div class="timer-card glass">
+      <div class="timer-display" id="timer">00:00:00</div>
+      <div class="status-row">
+        <span class="dot" id="dot"></span>
+        <span id="statusText">Ready</span>
+      </div>
+
+      <div class="time-setter">
+        <input class="time-input" id="customMin" type="number" min="1" max="180"
+               placeholder="min" oninput="setCustomTime()" autocomplete="off">
+        <span class="time-input-label">minutes</span>
+      </div>
+      <div class="presets">
+        <button class="preset-btn" onclick="selectPreset(15)">15 min</button>
+        <button class="preset-btn" onclick="selectPreset(20)">20 min</button>
+        <button class="preset-btn" onclick="selectPreset(30)">30 min</button>
+        <button class="preset-btn" onclick="selectPreset(60)">60 min</button>
+      </div>
+
+      <div class="field-block">
+        <div class="field-label">Start</div>
+        <input class="field-input" id="workingOn" type="text"
+               placeholder="What are you working on? (optional)" autocomplete="off">
+      </div>
+
+      <div class="field-block is-hidden" id="whatDidWrap">
+        <div class="field-label">Stop</div>
+        <input class="field-input" id="whatDid" type="text"
+               placeholder="What did you do? (optional)" autocomplete="off">
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-go" id="toggleBtn" onclick="toggle()" disabled style="opacity:0.4;cursor:not-allowed">Select a time</button>
+        <button class="btn btn-hold is-hidden" id="holdBtn" onclick="holdToggle()">Hold</button>
+        <button class="btn btn-reset" id="resetBtn" onclick="resetTimer()">Reset</button>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat glass">
+        <div class="stat-label">Today</div>
+        <div class="stat-val" id="sToday">0m</div>
+      </div>
+      <div class="stat glass">
+        <div class="stat-label">This Week</div>
+        <div class="stat-val" id="sWeek">0m</div>
+      </div>
+      <div class="stat glass">
+        <div class="stat-label">Total</div>
+        <div class="stat-val" id="sTotal">0m</div>
+      </div>
+    </div>
+
+    <div class="entries">
+      <h2>Recent Sessions</h2>
+      <div class="entries-card glass">
+        <table>
+          <thead>
+            <tr><th>Date</th><th>Time</th><th>Duration</th><th>Notes</th><th>Actions</th></tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+      <div class="edit-card glass is-hidden" id="editCard">
+        <h3>Edit Session</h3>
+        <div class="edit-grid">
+          <div class="field-block">
+            <div class="field-label">Start</div>
+            <input class="field-input" id="editStart" type="datetime-local">
+          </div>
+          <div class="field-block">
+            <div class="field-label">End</div>
+            <input class="field-input" id="editEnd" type="datetime-local">
+          </div>
+          <div class="field-block">
+            <div class="field-label">Duration (minutes)</div>
+            <input class="field-input" id="editDuration" type="number" min="0" step="1" placeholder="0">
+          </div>
+          <div class="field-block wide">
+            <div class="field-label">Working On</div>
+            <input class="field-input" id="editWorkingOn" type="text" placeholder="What were you working on?">
+          </div>
+          <div class="field-block wide">
+            <div class="field-label">What You Did</div>
+            <input class="field-input" id="editWhatDid" type="text" placeholder="What did you do?">
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn btn-go" onclick="saveEdit()">Save Changes</button>
+          <button class="btn btn-reset" onclick="cancelEdit()">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="hint">Press <kbd>Space</kbd> to start / stop • use Hold to pause</div>
+  </div>
+
+<script>
+/* -- state -- */
+const K = 'tt_state';
+const DEFAULT_STATE = {
+  r: false,
+  t: null,
+  preset: null,
+  paused: false,
+  pauseStarted: null,
+  pauseAccumMs: 0,
+  workingOn: ''
+};
+const get = () => ({
+  ...DEFAULT_STATE,
+  ...(JSON.parse(localStorage.getItem(K) || '{}'))
+});
+const set = s => localStorage.setItem(K, JSON.stringify({ ...DEFAULT_STATE, ...s }));
+let iv = null, entries = [];
+let selectedPreset = null;
+let alarmFired = false;
+let editingId = null;
+
+/* -- alarm sound (server-side via macOS afplay) -- */
+function playAlarm() {
+  fetch('/api/alarm', { method: 'POST' }).catch(() => {});
+}
+
+/* -- presets & custom time -- */
+function setCustomTime() {
+  const s = get();
+  const val = parseInt(document.getElementById('customMin').value);
+  if (val > 0) {
+    selectedPreset = val;
+  } else if (!s.r) {
+    selectedPreset = null;
+  } else {
+    return;
+  }
+  updatePresetUI();
+  if (s.r) {
+    set({ ...s, preset: selectedPreset });
+    alarmFired = false;
+    tick();
+    ui();
+  } else {
+    updateTimerDisplay();
+    ui();
+  }
+}
+
+function selectPreset(mins) {
+  const s = get();
+  if (!s.r && selectedPreset === mins) {
+    selectedPreset = null;
+    document.getElementById('customMin').value = '';
+  } else {
+    selectedPreset = mins;
+    document.getElementById('customMin').value = mins;
+  }
+  updatePresetUI();
+  if (s.r) {
+    set({ ...s, preset: selectedPreset });
+    alarmFired = false;
+    tick();
+    ui();
+  } else {
+    updateTimerDisplay();
+    ui();
+  }
+}
+
+function updatePresetUI() {
+  document.querySelectorAll('.preset-btn').forEach(btn => {
+    const m = parseInt(btn.textContent);
+    btn.classList.toggle('selected', m === selectedPreset);
+  });
+}
+
+function updateTimerDisplay() {
+  if (get().r) return;
+  document.getElementById('timer').textContent = selectedPreset
+    ? fmtElapsed(selectedPreset * 60 * 1000)
+    : '00:00:00';
+}
+
+/* -- timer -- */
+function toggle() { get().r ? stop() : start(); }
+
+function getActiveElapsedMs(s, nowMs = Date.now()) {
+  if (!s.t) return 0;
+  const pausedMs = s.pauseAccumMs || 0;
+  const livePauseMs = s.paused && s.pauseStarted
+    ? nowMs - new Date(s.pauseStarted).getTime()
+    : 0;
+  return Math.max(0, nowMs - new Date(s.t).getTime() - pausedMs - livePauseMs);
+}
+
+function start() {
+  if (!selectedPreset) return;
+  clearInterval(iv);
+  iv = null;
+  alarmFired = false;
+  const workingOn = document.getElementById('workingOn').value.trim();
+  set({
+    r: true,
+    t: new Date().toISOString(),
+    preset: selectedPreset,
+    paused: false,
+    pauseStarted: null,
+    pauseAccumMs: 0,
+    workingOn
+  });
+  document.getElementById('whatDid').value = '';
+  ui();
+  tick();
+  iv = setInterval(tick, 1000);
+}
+
+function holdToggle() {
+  const s = get();
+  if (!s.r) return;
+  s.paused ? resume() : hold();
+}
+
+function hold() {
+  const s = get();
+  if (!s.r || s.paused) return;
+  clearInterval(iv);
+  iv = null;
+  set({ ...s, paused: true, pauseStarted: new Date().toISOString() });
+  tick();
+  ui();
+}
+
+function resume() {
+  const s = get();
+  if (!s.r || !s.paused || !s.pauseStarted) return;
+  const extraPauseMs = Date.now() - new Date(s.pauseStarted).getTime();
+  set({
+    ...s,
+    paused: false,
+    pauseStarted: null,
+    pauseAccumMs: (s.pauseAccumMs || 0) + extraPauseMs
+  });
+  alarmFired = false;
+  ui();
+  tick();
+  clearInterval(iv);
+  iv = setInterval(tick, 1000);
+}
+
+function stop() {
+  const s = get();
+  if (!s.t) return;
+  const t0 = new Date(s.t);
+  const t1 = new Date();
+  const dur = Math.round(getActiveElapsedMs(s, t1.getTime()) / 60000);
+  const whatDid = document.getElementById('whatDid').value.trim();
+  const legacyDeliverables = [
+    s.workingOn ? `Start: ${s.workingOn}` : '',
+    whatDid ? `Stop: ${whatDid}` : ''
+  ].filter(Boolean).join(' • ');
+
+  fetch('/api/entry', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      start: fmtDT(t0),
+      end: fmtDT(t1),
+      duration: String(dur),
+      working_on: s.workingOn || '',
+      what_did: whatDid,
+      deliverables: legacyDeliverables
+    })
+  }).then(res => {
+    if (!res.ok) throw new Error('Server returned ' + res.status);
+    set(DEFAULT_STATE);
+    selectedPreset = null;
+    updatePresetUI();
+    document.getElementById('customMin').value = '';
+    document.getElementById('workingOn').value = '';
+    document.getElementById('whatDid').value = '';
+    clearInterval(iv);
+    iv = null;
+    document.getElementById('timer').textContent = '00:00:00';
+    document.getElementById('timer').className = 'timer-display';
+    ui();
+    load();
+  }).catch(err => {
+    console.error(err);
+    alert('Failed to save session. Is the server ("make time") still running?\n\nError: ' + err.message);
+  });
+}
+
+function resetTimer(force = false) {
+  const s = get();
+  const hasUnsavedState =
+    !!s.r ||
+    !!s.t ||
+    !!selectedPreset ||
+    !!document.getElementById('customMin').value ||
+    !!document.getElementById('workingOn').value.trim() ||
+    !!document.getElementById('whatDid').value.trim();
+
+  if (hasUnsavedState && !force && !confirm('Reset the timer and clear unsaved inputs?')) {
+    return;
+  }
+
+  clearInterval(iv);
+  iv = null;
+  alarmFired = false;
+  selectedPreset = null;
+  set(DEFAULT_STATE);
+  document.getElementById('customMin').value = '';
+  document.getElementById('workingOn').value = '';
+  document.getElementById('whatDid').value = '';
+  document.getElementById('timer').textContent = '00:00:00';
+  document.getElementById('timer').className = 'timer-display';
+  updatePresetUI();
+  updateTimerDisplay();
+  ui();
+}
+
+function tick() {
+  const s = get();
+  if (!s.r || !s.t) return;
+
+  const timerEl = document.getElementById('timer');
+  const targetMs = (s.preset || 20) * 60 * 1000;
+  const activeElapsedMs = getActiveElapsedMs(s);
+  const remainMs = targetMs - activeElapsedMs;
+
+  if (remainMs > 0) {
+    timerEl.textContent = fmtElapsed(remainMs);
+    if (s.paused) {
+      timerEl.className = 'timer-display paused';
+    } else if (remainMs < 60000) {
+      timerEl.className = 'timer-display warning';
+    } else {
+      timerEl.className = 'timer-display active';
+    }
+    return;
+  }
+
+  timerEl.textContent = '+' + fmtElapsed(-remainMs);
+  timerEl.className = s.paused ? 'timer-display paused' : 'timer-display overtime';
+
+  if (!s.paused && !alarmFired) {
+    alarmFired = true;
+    playAlarm();
+  }
+}
+
+function ui() {
+  const s = get();
+  const on = !!s.r;
+  const paused = !!s.paused;
+
+  const toggleBtn = document.getElementById('toggleBtn');
+  const holdBtn = document.getElementById('holdBtn');
+  const dot = document.getElementById('dot');
+  const statusText = document.getElementById('statusText');
+  const workingOnEl = document.getElementById('workingOn');
+  const whatDidWrap = document.getElementById('whatDidWrap');
+  const whatDidEl = document.getElementById('whatDid');
+
+  if (on) {
+    toggleBtn.className = 'btn btn-stop';
+    toggleBtn.textContent = 'Stop Timer';
+    toggleBtn.disabled = false;
+    toggleBtn.style.opacity = '1';
+    toggleBtn.style.cursor = 'pointer';
+
+    holdBtn.className = `btn ${paused ? 'btn-go' : 'btn-hold'}`;
+    holdBtn.textContent = paused ? 'Resume' : 'Hold';
+    holdBtn.classList.remove('is-hidden');
+
+    whatDidWrap.classList.remove('is-hidden');
+  } else if (selectedPreset) {
+    toggleBtn.className = 'btn btn-go';
+    toggleBtn.textContent = 'Start Timer';
+    toggleBtn.disabled = false;
+    toggleBtn.style.opacity = '1';
+    toggleBtn.style.cursor = 'pointer';
+
+    holdBtn.classList.add('is-hidden');
+    whatDidWrap.classList.add('is-hidden');
+  } else {
+    toggleBtn.className = 'btn btn-go';
+    toggleBtn.textContent = 'Select a time';
+    toggleBtn.disabled = true;
+    toggleBtn.style.opacity = '0.4';
+    toggleBtn.style.cursor = 'not-allowed';
+
+    holdBtn.classList.add('is-hidden');
+    whatDidWrap.classList.add('is-hidden');
+  }
+
+  workingOnEl.disabled = on;
+  whatDidEl.disabled = !on;
+
+  dot.classList.toggle('on', on && !paused);
+  dot.classList.toggle('hold', on && paused);
+  statusText.textContent = on ? (paused ? 'On Hold' : 'Running') : 'Ready';
+}
+
+/* -- formatting -- */
+const pad = n => String(n).padStart(2, '0');
+function fmtDT(d) {
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+}
+function fmtElapsed(ms) {
+  const s = Math.floor(ms / 1000);
+  return `${pad(Math.floor(s / 3600))}:${pad(Math.floor(s % 3600 / 60))}:${pad(s % 60)}`;
+}
+function fmtDur(m) {
+  m = parseInt(m) || 0;
+  if (m < 60) return `${m}m`;
+  const h = Math.floor(m / 60), r = m % 60;
+  return r ? `${h}h ${r}m` : `${h}h`;
+}
+function fmtDate(s) { return (s || '').substring(0, 10); }
+function fmtTime(s) { return (s || '').substring(11, 16); }
+function toLocalInputDT(s) {
+  if (!s || s.length < 16) return '';
+  return `${s.substring(0, 10)}T${s.substring(11, 16)}`;
+}
+function fromLocalInputDT(s) {
+  if (!s) return '';
+  return `${s.replace('T', ' ')}:00`;
+}
+function esc(s) {
+  return String(s || '').replace(/[&<>"']/g, ch => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  }[ch]));
+}
+
+/* -- data -- */
+async function load() {
+  try {
+    entries = await (await fetch('/api/entries')).json();
+    render();
+    stats();
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+function renderNotes(e) {
+  const lines = [];
+  if (e.working_on) {
+    lines.push(`<div class="note-line"><span class="note-tag">Start</span>${esc(e.working_on)}</div>`);
+  }
+  if (e.what_did) {
+    lines.push(`<div class="note-line"><span class="note-tag">Stop</span>${esc(e.what_did)}</div>`);
+  }
+  if (!lines.length && e.deliverables) {
+    lines.push(`<div class="note-line">${esc(e.deliverables)}</div>`);
+  }
+  return lines.length ? lines.join('') : '—';
+}
+
+function openEdit(id) {
+  if (!id) {
+    alert('Restart "make time" once to enable editing existing records.');
+    return;
+  }
+
+  const entry = entries.find(e => e.id === id);
+  if (!entry) {
+    alert('Could not find that record. Try refreshing.');
+    return;
+  }
+
+  editingId = id;
+  document.getElementById('editStart').value = toLocalInputDT(entry.start);
+  document.getElementById('editEnd').value = toLocalInputDT(entry.end);
+  document.getElementById('editDuration').value = parseInt(entry.duration) || 0;
+  document.getElementById('editWorkingOn').value = entry.working_on || '';
+  document.getElementById('editWhatDid').value = entry.what_did || entry.deliverables || '';
+  document.getElementById('editCard').classList.remove('is-hidden');
+  document.getElementById('editCard').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function cancelEdit() {
+  editingId = null;
+  document.getElementById('editStart').value = '';
+  document.getElementById('editEnd').value = '';
+  document.getElementById('editDuration').value = '';
+  document.getElementById('editWorkingOn').value = '';
+  document.getElementById('editWhatDid').value = '';
+  document.getElementById('editCard').classList.add('is-hidden');
+}
+
+async function saveEdit() {
+  if (!editingId) return;
+
+  const start = document.getElementById('editStart').value;
+  const end = document.getElementById('editEnd').value;
+  const duration = document.getElementById('editDuration').value.trim();
+  const workingOn = document.getElementById('editWorkingOn').value.trim();
+  const whatDid = document.getElementById('editWhatDid').value.trim();
+
+  if (!start || !end || duration === '') {
+    alert('Start, end, and duration are required when editing a record.');
+    return;
+  }
+
+  const legacyDeliverables = [
+    workingOn ? `Start: ${workingOn}` : '',
+    whatDid ? `Stop: ${whatDid}` : ''
+  ].filter(Boolean).join(' • ');
+
+  try {
+    const res = await fetch('/api/update-entry', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: editingId,
+        start: fromLocalInputDT(start),
+        end: fromLocalInputDT(end),
+        duration: String(Math.max(0, parseInt(duration) || 0)),
+        working_on: workingOn,
+        what_did: whatDid,
+        deliverables: legacyDeliverables
+      })
+    });
+
+    if (!res.ok) {
+      throw new Error(res.status === 404
+        ? 'Update endpoint not available. Restart "make time" once and try again.'
+        : `Server returned ${res.status}`);
+    }
+
+    cancelEdit();
+    load();
+  } catch (err) {
+    console.error(err);
+    alert(`Failed to update record.\n\n${err.message}`);
+  }
+}
+
+function render() {
+  const tb = document.getElementById('tbody');
+  if (!entries.length) {
+    tb.innerHTML = '<tr><td colspan="5" class="empty">No sessions yet — start your first one!</td></tr>';
+    return;
+  }
+  tb.innerHTML = entries.slice(0, 25).map(e => `
+    <tr>
+      <td>${esc(fmtDate(e.start))}</td>
+      <td>${esc(fmtTime(e.start))} - ${esc(fmtTime(e.end))}</td>
+      <td class="dur">${esc(fmtDur(e.duration))}</td>
+      <td class="notes-cell">${renderNotes(e)}</td>
+      <td class="action-cell">
+        <button class="table-btn" ${e.id ? '' : 'disabled'} title="${e.id ? 'Edit this record' : 'Restart make time once to enable editing'}" data-id="${esc(e.id || '')}" onclick="openEdit(this.dataset.id)">Edit</button>
+      </td>
+    </tr>`).join('');
+}
+
+function stats() {
+  const now = new Date();
+  const todayStr = fmtDT(now).substring(0, 10);
+  const dow = now.getDay();
+  const mon = new Date(now);
+  mon.setDate(now.getDate() - (dow === 0 ? 6 : dow - 1));
+  const monStr = fmtDT(mon).substring(0, 10);
+
+  let td = 0, wk = 0, tot = 0;
+  entries.forEach(e => {
+    const m = parseInt(e.duration) || 0;
+    const d = (e.start || '').substring(0, 10);
+    tot += m;
+    if (d === todayStr) td += m;
+    if (d >= monStr) wk += m;
+  });
+  document.getElementById('sToday').textContent = fmtDur(td);
+  document.getElementById('sWeek').textContent = fmtDur(wk);
+  document.getElementById('sTotal').textContent = fmtDur(tot);
+}
+
+/* -- keyboard -- */
+document.addEventListener('keydown', e => {
+  if (e.code === 'Space' && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
+    e.preventDefault();
+    toggle();
+  }
+});
+
+/* -- init -- */
+window.addEventListener('load', () => {
+  const s = get();
+
+  if (s.r && s.t) {
+    const elapsed = Date.now() - new Date(s.t).getTime();
+    if (elapsed > 2 * 60 * 60 * 1000) {
+      set(DEFAULT_STATE);
+      updatePresetUI();
+      updateTimerDisplay();
+      ui();
+    } else {
+      selectedPreset = s.preset || null;
+      document.getElementById('customMin').value = s.preset || '';
+      document.getElementById('workingOn').value = s.workingOn || '';
+      updatePresetUI();
+      ui();
+      tick();
+      if (!s.paused) {
+        iv = setInterval(tick, 1000);
+      }
+    }
+  } else {
+    set(DEFAULT_STATE);
+    updatePresetUI();
+    updateTimerDisplay();
+    ui();
+  }
+
+  load();
+});
+</script>
+</body>
+</html>

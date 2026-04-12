@@ -1,0 +1,48 @@
+start,end,duration,deliverables
+2026-03-25 14:03:09,2026-03-25 14:26:49,24,round1 second question sql yoy overtime
+2026-03-25 13:57:51,2026-03-25 13:58:00,0,round1 sql question1 ctr over time
+2026-03-25 12:54:47,2026-03-25 12:55:37,1,round1 sql question1 ctr over time
+2026-03-25 12:38:13,2026-03-25 12:54:23,16,round1 chat sql
+2026-03-23 14:22:35,2026-03-23 14:38:25,16,learn rlhf
+2026-03-23 14:01:59,2026-03-23 14:22:30,21,learn rlhf
+2026-03-23 13:15:32,2026-03-23 13:36:31,21,learn rlhf
+2026-03-22 16:48:35,2026-03-22 17:09:01,20,learn transfomer
+2026-03-21 13:14:21,2026-03-21 13:31:38,17,"continue llm lesson: not much progress, tired and frustrated"
+2026-03-21 12:43:16,2026-03-21 13:03:52,21,"llm-transformers-lesson-start it (adminstration of asking claude to visualize, reading, yet to read before ending lesson)"
+2026-03-20 19:01:12,2026-03-20 19:41:29,40,"probability redrill, 3 questions. moving to llm and transfomers"
+2026-03-20 17:45:44,2026-03-20 18:45:12,59,probability questions 3 finsih mock. next i will start redrilling on probability and stats
+2026-03-19 17:27:10,2026-03-19 17:47:47,21,probability
+2026-03-19 17:02:24,2026-03-19 17:09:28,7,probability questions
+2026-03-19 16:34:49,2026-03-19 16:43:36,9,stats-ml-llm practice: probability
+2026-03-19 16:14:36,2026-03-19 16:34:45,20,stats-ml-llm practice: probability 1q
+2026-03-19 15:44:26,2026-03-19 16:14:28,30,stats-ml-llm practice: probability (1 question so far)
+2026-03-18 19:00:16,2026-03-18 19:15:53,16,"last probability question, finish mock"
+2026-03-18 18:44:31,2026-03-18 19:00:10,16,few more questions in the mock interivew now on the 11th which is the last one (stats probability subject)
+2026-03-18 18:08:03,2026-03-18 18:39:22,31,
+2026-03-18 17:24:06,2026-03-18 17:40:23,16,doing stats+ml mock with claude
+2026-03-18 16:42:15,2026-03-18 17:03:03,21,organized file to chat to teach me the stats and probability now i see it is too simple
+2026-03-18 16:21:07,2026-03-18 16:42:12,21,I leave the ab test as I feel failure. converting files to format to use to learn stats and probability llm
+2026-03-18 12:55:43,2026-03-18 13:15:48,20,
+2026-03-17 18:47:00,2026-03-17 18:52:09,5,try mock question
+2026-03-17 18:29:20,2026-03-17 18:44:22,15,
+2026-03-17 18:03:51,2026-03-17 18:29:16,25,
+2026-03-17 16:59:35,2026-03-17 17:19:45,20,"finish ab-test new claude mock, actual: tech problem with stopper, tech problem with claude"
+2026-03-17 16:51:05,2026-03-17 16:56:14,5,
+2026-03-16 19:40:00,2026-03-16 20:15:30,35,mock test+starting to learn the cupped subject (var reduction)
+2026-03-16 18:40:59,2026-03-16 19:34:16,53,mock test+starting to learn the cupped subject (var reduction)
+2026-03-16 17:32:17,2026-03-16 17:56:56,25,network effect learn + question
+2026-03-16 17:06:18,2026-03-16 17:29:24,23,"2 drugs question, primacy novelty effect question"
+2026-03-16 16:12:26,2026-03-16 16:43:43,31,"solve: ""You run your Google summary box experiment. Results look great — sessions-per-user up 8%, p < 0.001. But Control group has 52,000 users and Treatment has 48,000 users. You configured 50/50. What's wrong and what do you do?"""
+2026-03-16 15:39:57,2026-03-16 16:11:59,32,"1  more questions with claude ""You see a 3% increase in sessions-per-user. p-value = 0.12. What do you do?"" i solved it and ietrated with claude how to do so"
+2026-03-16 14:24:10,2026-03-16 15:14:18,50,keep talking to claude simulating ab testing interview. finish 1-2 questions properly
+2026-03-15 19:23:40,2026-03-15 19:45:42,22,continue dialogue with claude testing me about ab - test
+2026-03-15 19:22:48,2026-03-15 19:22:49,0,
+2026-03-15 19:21:01,2026-03-15 19:21:03,0,
+2026-03-15 19:12:41,2026-03-15 19:12:42,0,
+2026-03-15 18:54:49,2026-03-15 18:54:52,0,
+2026-03-15 16:26:23,2026-03-15 16:46:47,20,ab-testing part 2
+2026-03-15 15:05:27,2026-03-15 15:25:27,20,
+2026-03-15 14:25:35,2026-03-15 14:45:35,20,
+2026-03-15 13:32:54,2026-03-15 13:33:05,0,
+2026-03-15 16:26:23,2026-03-15 16:46:47,20,asked ai to do subset and
+2026-03-15 17:06:05,2026-03-15 17:55:07,49,
