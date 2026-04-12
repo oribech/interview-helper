@@ -1,0 +1,65 @@
+Skip to main content
+make deep research more details: I want to find ALL possible details/leaks/redditors writing about how the interivews below loo
+Advertise on Reddit
+Open chat
+Create
+Create post
+Open inbox
+Expand user menu
+Reddit Rules
+Privacy Policy
+User Agreement
+Accessibility
+Reddit, Inc. © 2026. All rights reserved.
+r/developersIndia
+2 mo. ago
+picklerish1
+Data Scientist interview at Google scheduled in one week
+
+My interview is scheduled for next Friday. Can anyone who has given data scientist interviews at Google walk me through the process, rounds and skills required? What level of DSA questions will be asked? How deep prob/stat and ML questions will be asked?
+
+Currently I have 2.5 YOE in data science at a good SBC. I can solve most LC mediums in arrays and stacks, little bit in binary search and trees, and hard qs in sql. I have an intuitive understanding of all ML/DL models (but mathematically shallow). I am good with prob and stat as well but have not solved any questions.
+
+What should I focus on for the next week?
+
+11 upvotes
+·
+15 comments
+illegal_wepon
+·
+1 mo. ago
+
+DSA is minimal.. the initial two rounds are mostly stats and ml
+
+2 votes
+Go to comment
+Go to Post
+Collapse Navigation
+Start a community
+GAMES ON REDDIT
+Daily DM
+
+Take an adventure
+
+Discover More
+CUSTOM FEEDS
+Create Custom Feed
+COMMUNITIES
+Manage Communities
+RESOURCES
+About Reddit
+Advertise
+Developer Platform
+Reddit Pro
+BETA
+Help
+Blog
+Careers
+Press
+Communities
+Best of Reddit
+Reddit Rules
+Privacy Policy
+User Agreement
+Accessibility
+Reddit, Inc. © 2026. All rights reserved.

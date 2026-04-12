@@ -1,0 +1,183 @@
+Skip to main content
+Interview Experience for a Data Science role at Google : r/DataScienceJobs
+Advertise on Reddit
+Open chat
+Create
+Create post
+Open inbox
+Expand user menu
+Go to DataScienceJobs
+r/DataScienceJobs
+•
+7mo ago
+KitchenTaste7229
+Interview Experience for a Data Science role at Google
+Discussion
+
+I’ve been grinding through interview prep lately and Google is one of the companies I’m aiming for this year. I’ve read the usual blog posts about their “structured interviews” and “behavioral + technical rounds,” but I feel like those don’t really tell you what it’s actually like.
+
+If you’ve been through the process for a Data Science roleI there (even if you didn’t accept/land the offer), I’d love to hear:
+
+How many rounds did you end up doing?
+
+Was it more SQL/stats heavy, or machine learning focused?
+
+Any curveball questions or unexpected formats?
+
+Did they give you feedback after?
+
+Honestly just trying to get a sense of what to expect beyond what's out there. Any stories, advice, or “I wish I knew this before” moments would be awesome.
+
+Archived post. New comments cannot be posted and votes cannot be cast.
+Share
+Sort by:
+Disastrous_Major6487
+•
+2mo ago
+dn_cf
+•
+7mo ago
+
+Google’s data science interview usually has 3–5 rounds: a recruiter screen, a technical screen (SQL, Python/R, stats, probability, sometimes light ML), and an onsite loop of 4–5 interviews covering coding, experiment design, product sense, and behavioral questions. SQL and statistics are core, with ML more prominent in research-heavy roles. Expect metric design, A/B testing, and open-ended product cases, plus occasional curveballs like regression interpretation or probability puzzles. Feedback after rejection is rare, with final decisions made by a hiring committee. For prep, balance SQL, stats, coding, and business sense using platforms like LeetCode, StrataScratch, and Interview Query.
+
+Share
+NakamericaIsANoob
+•
+7mo ago
+
+could you elaborate on business sense? Thanks!
+
+Share
+Filippo295
+•
+7mo ago
+
+When you say research heavy roles you mean data scientist research and not an actual researcher (phd, research scientist…) correct?
+
+I mean i saw that google DS jobs are split between DS product and DS research and i was wondering how much ML the latter does
+
+Share
+anomnib
+•
+7mo ago
+
+Data science research aren’t researchers roles but the role can involve working on more complex multi-year modeling problems. DSR has a very high percentage of PhDs. However, in practice, some DSRs end up working very similarly to data science product
+
+Share
+[deleted]
+•
+7mo ago
+
+Feedback after rejection is rare
+
+Then these corporate people say, India lacks talent.
+
+Share
+Disastrous_Major6487
+•
+2mo ago
+scfabric
+•
+7mo ago
+
+Hi! I went through the first round for a Sr. Product DS at Google. It consisted of 2 interviews, both technical. One was SQL/Python + Product Sense, and the other was Stats/ML + Metrics. All the questions were extremely fair. I would recommend reading "Ace the Data Science Interview", looking at practice questions on Glassdoor and watching Emma Ding's videos. I didn't make it to the second round (they did give some feedback about which areas were weaker), but was told by the recruiter that it would be the same thing plus an extra behavioral interview.
+
+Share
+Both-Resist-9109
+•
+4mo ago
+
+So, SQL window functions, joins, subqueries, CTEs, Python (Pandas, NumPy, scikit-learn, Matplotlib, Seaborn) should be sufficient from a coding perspective, right? I don't have to go through algorithms and data structures, right?
+
+And for programming, will it be like I can choose between SQL, Python, or R, or will there be a mandatory SQL problem and then a Python question, followed by a case study which contains experimentation,stats,probability product sense, and A/B testing?
+
+Share
+AttitudeJealous3105
+•
+7mo ago
+
+Hi, I have been grinding leetcode to target MAANG. I have experience in data science for 7 years. I'm really confused what needs to be studied to target data science roles.
+
+For meta swe ml position leetcode is must so I'm doing it anyway
+
+For Google, it looks like sql, statistics, ml almost everything is asked.
+
+Then comes system design, which most of the people tell me to do both traditional ml system and ml system design
+
+How do start this journey if I want to target maang interview in next 6 months ?
+
+Share
+Bright-University-84
+•
+7mo ago
+
+I am in the same boat as you brother , We have so less content available online related to Ds for maang role .
+
+Could you Please share me the resources too if you find something important . Can I Dm ?
+
+Share
+AttitudeJealous3105
+•
+7mo ago
+
+Sure. I'm going through alex xu ml system design book and doing leetcode for now. To target DS roles in maang it's like studying the ocean.
+
+Share
+best_data_scientist
+•
+7mo ago
+
+I am also going through Alex Xu book, I have 9 years exp. can I dm ?
+
+Share
+AttitudeJealous3105
+•
+7mo ago
+
+Sure
+
+Share
+Created May 23, 2013
+Public
+6.9K210
+R/DATASCIENCEJOBS RULES
+1
+No resume review or roasting.
+MODERATORS
+Message Mods
+u/mTiCP
+View all moderators
+Reddit Rules
+Privacy Policy
+User Agreement
+Accessibility
+Reddit, Inc. © 2026. All rights reserved.
+Collapse Navigation
+Start a community
+GAMES ON REDDIT
+Daily DM
+
+Take an adventure
+
+Discover More
+CUSTOM FEEDS
+Create Custom Feed
+COMMUNITIES
+Manage Communities
+RESOURCES
+About Reddit
+Advertise
+Developer Platform
+Reddit Pro
+BETA
+Help
+Blog
+Careers
+Press
+Communities
+Best of Reddit
+Reddit Rules
+Privacy Policy
+User Agreement
+Accessibility
+Reddit, Inc. © 2026. All rights reserved.

@@ -1,0 +1,248 @@
+2026-04-12 20:12:35.898 - RealTimeSTT: realtimestt - INFO - Starting RealTimeSTT
+2026-04-12 20:12:35.907 - RealTimeSTT: realtimestt - INFO - Initializing audio recording (creating pyAudio input stream, sample rate: 16000 buffer size: 512
+2026-04-12 20:12:35.912 - RealTimeSTT: realtimestt - INFO - Initializing faster_whisper realtime transcription model tiny, default device: cpu, compute type: default, device index: 0, download root: None
+2026-04-12 20:12:40.252 - RealTimeSTT: realtimestt - DEBUG - Faster_whisper realtime speech to text transcription model initialized successfully
+2026-04-12 20:12:40.252 - RealTimeSTT: realtimestt - INFO - Initializing WebRTC voice with Sensitivity 3
+2026-04-12 20:12:40.253 - RealTimeSTT: realtimestt - DEBUG - WebRTC VAD voice activity detection engine initialized successfully
+2026-04-12 20:13:03.483 - RealTimeSTT: realtimestt - DEBUG - Silero VAD voice activity detection engine initialized successfully
+2026-04-12 20:13:03.484 - RealTimeSTT: realtimestt - DEBUG - Starting realtime worker
+2026-04-12 20:13:03.484 - RealTimeSTT: realtimestt - DEBUG - Waiting for main transcription model to start
+2026-04-12 20:13:03.484 - RealTimeSTT: realtimestt - DEBUG - Main transcription model ready
+2026-04-12 20:13:03.484 - RealTimeSTT: realtimestt - DEBUG - RealtimeSTT initialization completed successfully
+2026-04-12 20:13:03.485 - RealTimeSTT: realtimestt - INFO - Setting listen time
+2026-04-12 20:13:03.485 - RealTimeSTT: realtimestt - INFO - State changed from 'inactive' to 'listening'
+2026-04-12 20:13:03.485 - RealTimeSTT: realtimestt - DEBUG - Waiting for recording start
+2026-04-12 20:13:29.322 - RealTimeSTT: realtimestt - INFO - voice activity detected
+2026-04-12 20:13:29.322 - RealTimeSTT: realtimestt - INFO - recording started
+2026-04-12 20:13:29.322 - RealTimeSTT: realtimestt - INFO - State changed from 'listening' to 'recording'
+2026-04-12 20:13:29.323 - RealTimeSTT: realtimestt - DEBUG - Waiting for recording stop
+2026-04-12 20:13:29.341 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 16896
+2026-04-12 20:13:29.571 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So
+2026-04-12 20:13:29.572 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 19968
+2026-04-12 20:13:29.726 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So
+2026-04-12 20:13:29.773 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 24064
+2026-04-12 20:13:29.939 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So what is
+2026-04-12 20:13:29.973 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 27136
+2026-04-12 20:13:30.148 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So what is it?
+2026-04-12 20:13:30.173 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 30208
+2026-04-12 20:13:30.362 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So what is the difference?
+2026-04-12 20:13:30.375 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 33280
+2026-04-12 20:13:30.627 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So what is the difference?
+2026-04-12 20:13:30.627 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 37376
+2026-04-12 20:13:30.854 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So what is the difference between?
+2026-04-12 20:13:30.855 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 40448
+2026-04-12 20:13:31.088 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So what is the difference between
+2026-04-12 20:13:31.088 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 44544
+2026-04-12 20:13:31.287 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So what is the difference between
+2026-04-12 20:13:31.288 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 47616
+2026-04-12 20:13:31.494 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So what is the difference between
+2026-04-12 20:13:31.941 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 58880
+2026-04-12 20:13:32.162 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So what is the difference between
+2026-04-12 20:13:32.163 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 61952
+2026-04-12 20:13:32.420 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So what is the difference between running?
+2026-04-12 20:13:32.420 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 66048
+2026-04-12 20:13:32.714 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So what is the difference between run-of-form?
+2026-04-12 20:13:32.715 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 71168
+2026-04-12 20:13:32.989 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So what is the difference between running forest?
+2026-04-12 20:13:32.989 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 75264
+2026-04-12 20:13:33.317 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So, what is the difference between run-of-forest?
+2026-04-12 20:13:33.318 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 80384
+2026-04-12 20:13:33.625 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So what is the difference between running for its decision?
+2026-04-12 20:13:33.626 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 85504
+2026-04-12 20:13:33.943 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So what is the difference between run the forest decision theory?
+2026-04-12 20:13:33.943 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 90624
+2026-04-12 20:13:34.217 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So what is the difference between run the forest decision theory and...
+2026-04-12 20:13:34.218 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 94720
+2026-04-12 20:13:34.498 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So what is the difference between run the forest decision theory and...
+2026-04-12 20:13:34.620 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 101888
+2026-04-12 20:13:34.904 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So what is the difference between run the forest decision theory and where?
+2026-04-12 20:13:34.904 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 105984
+2026-04-12 20:13:35.243 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So what is the difference between run the forest decision theory and where the end?
+2026-04-12 20:13:35.243 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 111104
+2026-04-12 20:13:35.621 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So what is the difference between run-of-forest decision theory and where the end boosts?
+2026-04-12 20:13:35.622 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 117248
+2026-04-12 20:13:35.971 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So what is the difference between run-of-forest decision theory and where the end boosting?
+2026-04-12 20:13:36.620 - RealTimeSTT: realtimestt - INFO - recording stopped
+2026-04-12 20:13:36.620 - RealTimeSTT: realtimestt - DEBUG - No samples removed, final audio length: 133120
+2026-04-12 20:13:36.620 - RealTimeSTT: realtimestt - INFO - State changed from 'recording' to 'inactive'
+2026-04-12 20:13:36.621 - RealTimeSTT: realtimestt - INFO - State changed from 'inactive' to 'transcribing'
+2026-04-12 20:13:36.621 - RealTimeSTT: realtimestt - DEBUG - Adding transcription request, no early transcription started
+2026-04-12 20:13:36.626 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:13:36.728 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:13:36.830 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:13:36.933 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:13:37.035 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:13:37.137 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:13:37.244 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:13:37.349 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:13:37.451 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:13:37.552 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:13:37.653 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:13:37.754 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:13:37.855 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:13:37.957 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:13:38.059 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:13:38.160 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:13:38.262 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:13:38.363 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:13:38.464 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:13:38.566 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:13:38.668 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:13:38.769 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:13:38.829 - RealTimeSTT: realtimestt - INFO - State changed from 'transcribing' to 'inactive'
+2026-04-12 20:13:38.831 - RealTimeSTT: realtimestt - DEBUG - Model small completed transcription in 2.21 seconds
+2026-04-12 20:13:38.841 - RealTimeSTT: realtimestt - INFO - Setting listen time
+2026-04-12 20:13:38.842 - RealTimeSTT: realtimestt - INFO - State changed from 'inactive' to 'listening'
+2026-04-12 20:13:38.843 - RealTimeSTT: realtimestt - DEBUG - Waiting for recording start
+2026-04-12 20:13:44.995 - RealTimeSTT: realtimestt - INFO - voice activity detected
+2026-04-12 20:13:44.997 - RealTimeSTT: realtimestt - INFO - recording started
+2026-04-12 20:13:44.997 - RealTimeSTT: realtimestt - INFO - State changed from 'listening' to 'recording'
+2026-04-12 20:13:44.997 - RealTimeSTT: realtimestt - DEBUG - Waiting for recording stop
+2026-04-12 20:13:45.010 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 16896
+2026-04-12 20:13:45.137 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So...
+2026-04-12 20:13:45.211 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 19968
+2026-04-12 20:13:45.340 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So great.
+2026-04-12 20:13:45.412 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 23040
+2026-04-12 20:13:45.547 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So gratin.
+2026-04-12 20:13:45.637 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 27136
+2026-04-12 20:13:45.771 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So gratin.
+2026-04-12 20:13:45.837 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 30208
+2026-04-12 20:13:45.969 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So gratin
+2026-04-12 20:13:46.037 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 33280
+2026-04-12 20:13:46.171 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So gradient...
+2026-04-12 20:13:46.277 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 37376
+2026-04-12 20:13:46.413 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So great in...
+2026-04-12 20:13:46.477 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 40448
+2026-04-12 20:13:46.627 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So great in the...
+2026-04-12 20:13:46.719 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 44544
+2026-04-12 20:13:46.856 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So great in the
+2026-04-12 20:13:46.920 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 47616
+2026-04-12 20:13:47.091 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So great in this tree.
+2026-04-12 20:13:47.121 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 50688
+2026-04-12 20:13:47.278 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So great in the...
+2026-04-12 20:13:47.322 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 53760
+2026-04-12 20:13:47.486 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So, gradient is 3.
+2026-04-12 20:13:47.522 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 56832
+2026-04-12 20:13:47.694 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So, gradient is the gradient.
+2026-04-12 20:13:47.723 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 59904
+2026-04-12 20:13:47.927 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So, gradient, gradient, gradient, gradient.
+2026-04-12 20:13:47.927 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 62976
+2026-04-12 20:13:48.175 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So, gradient, gradient, gradient, gradient.
+2026-04-12 20:13:48.175 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 67072
+2026-04-12 20:13:48.345 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So great and two things.
+2026-04-12 20:13:48.375 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 70144
+2026-04-12 20:13:48.540 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  The gradient is like...
+2026-04-12 20:13:48.576 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 73216
+2026-04-12 20:13:48.821 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  The gradient is like a...
+2026-04-12 20:13:48.822 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 77312
+2026-04-12 20:13:48.983 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  The gradient is like...
+2026-04-12 20:13:49.103 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 82432
+2026-04-12 20:13:49.263 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  The gradient is like...
+2026-04-12 20:13:49.738 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 92672
+2026-04-12 20:13:49.955 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So great and this thing is like...
+2026-04-12 20:13:49.955 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 95744
+2026-04-12 20:13:50.155 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So gradient boosting is like a...
+2026-04-12 20:13:50.156 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 98816
+2026-04-12 20:13:50.410 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  The gradient is like a stack.
+2026-04-12 20:13:50.411 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 102912
+2026-04-12 20:13:50.584 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  The gradient is like stacking.
+2026-04-12 20:13:51.339 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 118272
+2026-04-12 20:13:51.508 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  The gradient is like stacking.
+2026-04-12 20:13:51.540 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 121344
+2026-04-12 20:13:51.716 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  The gradient is like stacking.
+2026-04-12 20:13:51.740 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 124416
+2026-04-12 20:13:51.915 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So gradient boosting is like stacking.
+2026-04-12 20:13:51.940 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 127488
+2026-04-12 20:13:52.155 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So, gradient boosting is like stacking.
+2026-04-12 20:13:52.155 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 130560
+2026-04-12 20:13:52.363 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  The gradient boosting is like stacking, boosting.
+2026-04-12 20:13:52.363 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 134656
+2026-04-12 20:13:52.580 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So, gradient boosting is like stacking boosting.
+2026-04-12 20:13:52.580 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 137728
+2026-04-12 20:13:52.791 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So gradient boosting is like stacking boosting I mean
+2026-04-12 20:13:52.791 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 140800
+2026-04-12 20:13:53.004 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So gradient boosting is like stacking boosting I mean
+2026-04-12 20:13:53.004 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 144896
+2026-04-12 20:13:53.221 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So gradient boosting is like stacking boosting I mean
+2026-04-12 20:13:53.259 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 148992
+2026-04-12 20:13:53.488 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So gradient boosting is like stacking boosting I mean like
+2026-04-12 20:13:53.488 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 152064
+2026-04-12 20:13:53.738 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So gradient boosting is like stacking boosting I mean like
+2026-04-12 20:13:54.399 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 167424
+2026-04-12 20:13:54.599 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So, gradient boosting is like stacking boosting.
+2026-04-12 20:13:54.599 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 169472
+2026-04-12 20:13:54.796 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So, gradient boosting is like stacking boosting.
+2026-04-12 20:13:54.799 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 173568
+2026-04-12 20:13:55.051 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So gradient boosting is like stacking boosting. I mean like it gives...
+2026-04-12 20:13:55.051 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 177664
+2026-04-12 20:13:55.342 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So, gradient boosting is like stacking, boosting, I mean, like it gives you...
+2026-04-12 20:13:55.343 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 181760
+2026-04-12 20:13:55.662 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So, gradient boosting is like stacking, boosting. I mean, like it gives you...
+2026-04-12 20:13:55.662 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 186880
+2026-04-12 20:13:55.921 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So gradient boosting is like stacking boosting I mean like it gives you the
+2026-04-12 20:13:55.922 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 190976
+2026-04-12 20:13:56.196 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So gradient boosting is like stacking boosting I mean like it gives you the
+2026-04-12 20:13:56.196 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 195072
+2026-04-12 20:13:56.460 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  So gradient boosting is like stacking boosting I mean like it gives you the
+2026-04-12 20:13:57.159 - RealTimeSTT: realtimestt - INFO - recording stopped
+2026-04-12 20:13:57.160 - RealTimeSTT: realtimestt - DEBUG - No samples removed, final audio length: 210944
+2026-04-12 20:13:57.160 - RealTimeSTT: realtimestt - INFO - State changed from 'recording' to 'inactive'
+2026-04-12 20:13:57.160 - RealTimeSTT: realtimestt - INFO - State changed from 'inactive' to 'transcribing'
+2026-04-12 20:13:57.160 - RealTimeSTT: realtimestt - DEBUG - Adding transcription request, no early transcription started
+2026-04-12 20:13:57.184 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:13:57.286 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:13:57.387 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:13:57.488 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:13:57.589 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:13:57.691 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:13:57.791 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:13:57.892 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:13:57.993 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:13:58.095 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:13:58.196 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:13:58.298 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:13:58.399 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:13:58.501 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:13:58.602 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:13:58.704 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:13:58.781 - RealTimeSTT: realtimestt - INFO - State changed from 'transcribing' to 'inactive'
+2026-04-12 20:13:58.782 - RealTimeSTT: realtimestt - DEBUG - Model small completed transcription in 1.62 seconds
+2026-04-12 20:13:58.782 - RealTimeSTT: realtimestt - INFO - Setting listen time
+2026-04-12 20:13:58.782 - RealTimeSTT: realtimestt - INFO - State changed from 'inactive' to 'listening'
+2026-04-12 20:13:58.782 - RealTimeSTT: realtimestt - DEBUG - Waiting for recording start
+2026-04-12 20:15:13.762 - RealTimeSTT: realtimestt - INFO - voice activity detected
+2026-04-12 20:15:13.762 - RealTimeSTT: realtimestt - INFO - recording started
+2026-04-12 20:15:13.762 - RealTimeSTT: realtimestt - INFO - State changed from 'listening' to 'recording'
+2026-04-12 20:15:13.762 - RealTimeSTT: realtimestt - DEBUG - Waiting for recording stop
+2026-04-12 20:15:13.785 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 16896
+2026-04-12 20:15:13.930 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  Okay.
+2026-04-12 20:15:13.985 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 19968
+2026-04-12 20:15:14.109 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  Okay.
+2026-04-12 20:15:14.186 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 23040
+2026-04-12 20:15:14.323 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  Okay.
+2026-04-12 20:15:14.397 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 27136
+2026-04-12 20:15:14.531 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  Okay.
+2026-04-12 20:15:14.598 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 30208
+2026-04-12 20:15:14.718 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  Okay.
+2026-04-12 20:15:14.799 - RealTimeSTT: realtimestt - DEBUG - Current realtime buffer size: 33280
+2026-04-12 20:15:14.931 - RealTimeSTT: realtimestt - DEBUG - Realtime text detected:  Okay, so...
+2026-04-12 20:15:15.819 - RealTimeSTT: realtimestt - INFO - recording stopped
+2026-04-12 20:15:15.820 - RealTimeSTT: realtimestt - DEBUG - No samples removed, final audio length: 49152
+2026-04-12 20:15:15.820 - RealTimeSTT: realtimestt - INFO - State changed from 'recording' to 'inactive'
+2026-04-12 20:15:15.820 - RealTimeSTT: realtimestt - INFO - State changed from 'inactive' to 'transcribing'
+2026-04-12 20:15:15.820 - RealTimeSTT: realtimestt - DEBUG - Adding transcription request, no early transcription started
+2026-04-12 20:15:15.833 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:15:15.934 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:15:16.035 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:15:16.136 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:15:16.238 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:15:16.339 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:15:16.440 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:15:16.541 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:15:16.642 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:15:16.744 - RealTimeSTT: realtimestt - DEBUG - Receive from parent_transcription_pipe after sendiung transcription request, transcribe_count: 1
+2026-04-12 20:15:16.774 - RealTimeSTT: realtimestt - INFO - State changed from 'transcribing' to 'inactive'
+2026-04-12 20:15:16.774 - RealTimeSTT: realtimestt - DEBUG - Model small completed transcription in 0.95 seconds
+2026-04-12 20:15:16.774 - RealTimeSTT: realtimestt - INFO - Setting listen time
+2026-04-12 20:15:16.774 - RealTimeSTT: realtimestt - INFO - State changed from 'inactive' to 'listening'
+2026-04-12 20:15:16.774 - RealTimeSTT: realtimestt - DEBUG - Waiting for recording start

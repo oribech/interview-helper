@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>BLEU Metric</title>
+<script>
+MathJax = { tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+  body { font-family: 'Segoe UI', system-ui, sans-serif; max-width: 700px; margin: 40px auto; padding: 0 20px; background: #1a1a2e; color: #e0e0e0; line-height: 1.7; }
+  h1 { color: #00d2ff; border-bottom: 2px solid #00d2ff33; padding-bottom: 8px; }
+  h3 { color: #7fdbca; margin-top: 28px; }
+  hr { border: none; border-top: 1px solid #ffffff22; margin: 28px 0; }
+  .tldr { background: #ffffff0a; border-left: 3px solid #00d2ff; padding: 12px 16px; border-radius: 4px; }
+  em { color: #999; }
+</style>
+</head>
+<body>
+
+<h1>BLEU Metric</h1>
+<p><strong>Goal:</strong> Exact $n$-gram precision + Brevity Penalty.</p>
+
+<h3>1. N-Gram Precision ($P_n$)</h3>
+$$P_n = \frac{\sum_{\text{n-gram} \in \text{Pred}} \text{Count}_{\text{clip}}(\text{n-gram})}{\sum_{\text{n-gram} \in \text{Pred}} \text{Count}(\text{n-gram})}$$
+<p><em>Clipped: Match count cannot exceed its max frequency in Reference</em></p>
+
+<h3>2. Brevity Penalty (BP)</h3>
+<p>$c = \text{length}(\text{Prediction})$ &nbsp;&nbsp; $r = \text{length}(\text{Reference})$</p>
+$$BP = \begin{cases} 1 & \text{if } c > r \\ e^{1 - r/c} & \text{if } c \le r \end{cases}$$
+
+<h3>3. Final BLEU Score</h3>
+$$\text{BLEU} = BP \cdot \left( \prod_{n=1}^{N} P_n \right)^{\!\frac{1}{N}}$$
+<p><em>Typically $N=4$, uniform weights $w_n = \frac{1}{N}$</em></p>
+
+<hr>
+<div class="tldr">
+<strong>TL;DR</strong>
+$$\text{BLEU} = BP \cdot \exp\!\left( \sum_{n=1}^{N} w_n \log P_n \right)$$
+</div>
+
+<hr>
+<h2 style="color:#00d2ff;">End-to-End Calculation Example (BLEU-2)</h2>
+
+<h3>1. Sentences</h3>
+<p>
+  <strong>Original (Reference):</strong> <code>the cat is on the mat</code> &nbsp;($r = 6$ words)<br>
+  <strong>Prediction:</strong> <code>the cat on the mat</code> &nbsp;($c = 5$ words)
+</p>
+
+<h3>2. General Formula</h3>
+$$ \text{BLEU} = BP \cdot \left( \prod_{n=1}^{N} P_n \right)^{\frac{1}{N}} $$
+
+<h3>3. Step-by-Step Derivation</h3>
+
+$$ P_1 = \frac{5}{5} = 1.0 $$
+<p><em>* <strong>$P_1$ (Unigram Precision):</strong> Prediction has 5 words. All 5 ("the"x2, "cat", "on", "mat") appear in Reference without exceeding their max counts. 5/5 matched.</em></p>
+
+$$ P_2 = \frac{3}{4} = 0.75 $$
+<p><em>* <strong>$P_2$ (Bigram Precision):</strong> Prediction has 4 word-pairs. 3 match Reference ("the cat", "on the", "the mat"). 1 misses ("cat on"). 3/4 matched.</em></p>
+
+$$ BP = e^{1 - \frac{6}{5}} = e^{-0.2} \approx 0.8187 $$
+<p><em>* <strong>BP (Brevity Penalty):</strong> Prediction ($c=5$) is shorter than Reference ($r=6$), so we penalize it using $e^{1 - r/c}$.</em></p>
+
+$$ \text{BLEU} = 0.8187 \cdot \left( 1.0 \times 0.75 \right)^{\frac{1}{2}} $$
+<p><em>* <strong>Substitution:</strong> Plug computed values into the general formula with $N=2$.</em></p>
+
+$$ \text{BLEU} = 0.8187 \cdot (0.75)^{0.5} $$
+<p><em>* <strong>Inner Product:</strong> Multiply the precisions inside the parenthesis ($1.0 \times 0.75 = 0.75$).</em></p>
+
+$$ \text{BLEU} = 0.8187 \cdot 0.8660 $$
+<p><em>* <strong>Apply Root:</strong> Take the square root (exponent $\frac{1}{2}$) of $0.75$.</em></p>
+
+$$ \text{BLEU} \approx \textbf{0.709} $$
+<p><em>* <strong>Final Result:</strong> Multiply the penalty by the grouped precision score to get the final scalar value.</em></p>
+
+<hr>
+<h2 style="color:#00d2ff;">What Does the Score Mean?</h2>
+<p><strong>Reference:</strong> <code>the cat is on the mat</code></p>
+
+<table style="border-collapse:collapse; margin:12px 0; width:100%;">
+<tr style="border-bottom:1px solid #ffffff33;">
+  <th style="text-align:left;padding:6px 12px 6px 0;">Prediction</th>
+  <th style="padding:6px 12px;">BLEU-4</th>
+  <th style="text-align:left;padding:6px 12px;">Why?</th>
+</tr>
+<tr style="background:#00ff0011;">
+  <td style="padding:6px 12px 6px 0;"><code>the cat is on the mat</code></td>
+  <td style="text-align:center;padding:6px 12px;color:#00ff88;"><strong>1.0</strong></td>
+  <td style="padding:6px 12px;">Exact match</td>
+</tr>
+<tr>
+  <td style="padding:6px 12px 6px 0;"><code>the cat sat on the mat</code></td>
+  <td style="text-align:center;padding:6px 12px;color:#7fdbca;">~0.33</td>
+  <td style="padding:6px 12px;">1 word wrong → breaks 3 bigrams, most trigrams, all 4-grams</td>
+</tr>
+<tr>
+  <td style="padding:6px 12px 6px 0;"><code>a cat is on a mat</code></td>
+  <td style="text-align:center;padding:6px 12px;color:#ffcc00;">~0.25</td>
+  <td style="padding:6px 12px;">Right structure, 2 words differ ("a" vs "the"×2)</td>
+</tr>
+<tr>
+  <td style="padding:6px 12px 6px 0;"><code>the dog sat under a table</code></td>
+  <td style="text-align:center;padding:6px 12px;color:#ff6b6b;">~0.0</td>
+  <td style="padding:6px 12px;">Only "the" matches, no n-gram overlap for $n \ge 2$</td>
+</tr>
+</table>
+
+<div class="tldr">
+<strong>Rule of thumb:</strong><br>
+• <strong>0.6+</strong> = Very good (better than many humans)<br>
+• <strong>0.3–0.5</strong> = Understandable, decent quality<br>
+• <strong>0.1–0.3</strong> = Getting the gist but poor phrasing<br>
+• <strong>&lt;0.1</strong> = Basically unrelated
+</div>
+
+<hr>
+<h2 style="color:#00d2ff;">Choosing $N$ (Number of N-grams)</h2>
+
+<table style="border-collapse:collapse; margin:12px 0; width:100%;">
+<tr style="border-bottom:1px solid #ffffff33;">
+  <th style="text-align:left;padding:6px 12px 6px 0;">$N$</th>
+  <th style="text-align:left;padding:6px 12px;">Measures</th>
+  <th style="text-align:left;padding:6px 12px;">Use when</th>
+</tr>
+<tr>
+  <td style="padding:6px 12px 6px 0;"><strong>BLEU-1</strong></td>
+  <td style="padding:6px 12px;">Word accuracy (bag of words)</td>
+  <td style="padding:6px 12px;">Only care about vocabulary overlap</td>
+</tr>
+<tr>
+  <td style="padding:6px 12px 6px 0;"><strong>BLEU-2</strong></td>
+  <td style="padding:6px 12px;">+ Word pairs (basic fluency)</td>
+  <td style="padding:6px 12px;">Short texts, simple tasks</td>
+</tr>
+<tr>
+  <td style="padding:6px 12px 6px 0;color:#7fdbca;"><strong>BLEU-4</strong> ⭐</td>
+  <td style="padding:6px 12px;">+ Phrase-level structure</td>
+  <td style="padding:6px 12px;"><strong>Standard default.</strong> Machine translation, summarization</td>
+</tr>
+<tr>
+  <td style="padding:6px 12px 6px 0;"><strong>BLEU-5+</strong></td>
+  <td style="padding:6px 12px;">+ Longer structures</td>
+  <td style="padding:6px 12px;">Rarely used — too strict, most scores → 0</td>
+</tr>
+</table>
+
+<div class="tldr">
+<strong>Key insight:</strong> Higher $N$ = stricter. $P_1$ checks "right words?", $P_4$ checks "right phrases?". BLEU-4 is the sweet spot — captures both vocabulary and fluency without being impossibly strict.
+</div>
+
+</body>
+</html>
