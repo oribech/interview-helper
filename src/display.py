@@ -16,6 +16,12 @@ _clients: set = set()
 # Event loop reference for thread-safe calls
 _loop = None
 
+# Current settings (updated by client dropdowns)
+_settings: dict = {"model": "claude-sonnet-4-6", "effort": "medium"}
+
+# External callback for settings changes
+_on_settings_change = None
+
 
 OVERLAY_HTML = """<!DOCTYPE html>
 <html lang="en">
@@ -24,6 +30,9 @@ OVERLAY_HTML = """<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Interview Helper</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -95,6 +104,48 @@ body {
 
 .status-text.updating {
     color: #f59e0b;
+}
+
+/* Dropdowns */
+.controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.control-group label {
+    font-size: 10px;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 500;
+}
+
+.control-group select {
+    background: rgba(30, 30, 50, 0.8);
+    color: #e2e8f0;
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    border-radius: 6px;
+    padding: 3px 8px;
+    font-size: 12px;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.control-group select:hover {
+    border-color: rgba(99, 102, 241, 0.6);
+}
+
+.control-group select:focus {
+    border-color: #6366f1;
 }
 
 /* Scratchpad */
@@ -190,7 +241,25 @@ body {
             <span>LIVE</span>
         </div>
     </div>
-    <span class="status-text" id="statusText">Connected</span>
+    <div class="controls">
+        <div class="control-group">
+            <label>Model</label>
+            <select id="modelSelect">
+                <option value="claude-sonnet-4-6">Sonnet 4.6</option>
+                <option value="claude-opus-4-6">Opus 4.6</option>
+                <option value="claude-haiku-4-5-20251001">Haiku 4.5</option>
+            </select>
+        </div>
+        <div class="control-group">
+            <label>Effort</label>
+            <select id="effortSelect">
+                <option value="low">Low</option>
+                <option value="medium" selected>Medium</option>
+                <option value="high">High</option>
+            </select>
+        </div>
+        <span class="status-text" id="statusText">Connected</span>
+    </div>
 </div>
 
 <div class="scratchpad">
@@ -212,8 +281,18 @@ const padContent = document.getElementById('padContent');
 const emptyState = document.getElementById('emptyState');
 const transcriptText = document.getElementById('transcriptText');
 const statusText = document.getElementById('statusText');
+const modelSelect = document.getElementById('modelSelect');
+const effortSelect = document.getElementById('effortSelect');
 
 let previousLines = [];
+
+// Send settings changes to server
+modelSelect.addEventListener('change', () => {
+    ws.send(JSON.stringify({type: 'settings', model: modelSelect.value, effort: effortSelect.value}));
+});
+effortSelect.addEventListener('change', () => {
+    ws.send(JSON.stringify({type: 'settings', model: modelSelect.value, effort: effortSelect.value}));
+});
 
 ws.onopen = () => {
     statusText.textContent = 'Connected';
@@ -279,6 +358,19 @@ function renderScratchpad(text) {
     padContent.innerHTML = newHtml;
     previousLines = lines;
 
+    // Render LaTeX formulas
+    if (typeof renderMathInElement === 'function') {
+        renderMathInElement(padContent, {
+            delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\\\(', right: '\\\\)', display: false},
+                {left: '\\\\[', right: '\\\\]', display: true},
+            ],
+            throwOnError: false,
+        });
+    }
+
     // Remove flash after animation
     setTimeout(() => {
         document.querySelectorAll('.line.flash').forEach(el => {
@@ -306,7 +398,17 @@ async def _websocket_handler(request):
 
     try:
         async for msg in ws:
-            pass
+            if msg.type == web.WSMsgType.TEXT:
+                try:
+                    data = json.loads(msg.data)
+                    if data.get("type") == "settings":
+                        _settings["model"] = data.get("model", _settings["model"])
+                        _settings["effort"] = data.get("effort", _settings["effort"])
+                        print(f"[Display] Settings updated: model={_settings['model']}, effort={_settings['effort']}")
+                        if _on_settings_change:
+                            _on_settings_change(_settings.copy())
+                except json.JSONDecodeError:
+                    pass
     finally:
         _clients.discard(ws)
         print(f"[Display] Client disconnected ({len(_clients)} total)")
@@ -360,11 +462,24 @@ def send_error(text: str):
     broadcast_threadsafe({"type": "error", "text": text})
 
 
+def get_settings() -> dict:
+    """Return current model/effort settings."""
+    return _settings.copy()
+
+
+def set_on_settings_change(callback):
+    """Register a callback for when the user changes settings."""
+    global _on_settings_change
+    _on_settings_change = callback
+
+
 def reset():
     """Reset module state — useful between tests."""
-    global _loop
+    global _loop, _on_settings_change
     _clients.clear()
     _loop = None
+    _on_settings_change = None
+    _settings.update({"model": "claude-sonnet-4-6", "effort": "medium"})
 
 
 async def start_server(host: str = "0.0.0.0", port: int = 8888):

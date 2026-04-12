@@ -17,7 +17,8 @@ RULES:
 - MAX 8 bullet points visible at a time
 - Each bullet: ≤15 words, keyword-dense, glanceable
 - Use → for sub-points (indent with 2 spaces)
-- **Bold** key terms, formulas, numbers
+- **Bold** key terms and numbers
+- Write ALL formulas in LaTeX using $...$ delimiters (e.g. $n = \\frac{(Z_\\alpha + Z_\\beta)^2 \\cdot 2\\sigma^2}{\\delta^2}$)
 - Remove stale bullets no longer relevant to the current topic
 - If a new topic appears, replace old topic bullets
 - If you hear a question, add concise answer hints
@@ -27,7 +28,7 @@ RULES:
 
 EXAMPLE OUTPUT:
 ⚡ **A/B test design** → define OEC first, then randomization unit
-  → sample size: n = (Zα+Zβ)²·2σ²/δ²
+  → sample size: $n = \\frac{(Z_\\alpha + Z_\\beta)^2 \\cdot 2\\sigma^2}{\\delta^2}$
 • **Guardrails**: latency p99, revenue, crash rate
 • **Duration**: min 2 weeks for weekly cycle effects
 • **Interference** → cluster randomization for network effects
@@ -56,6 +57,8 @@ def update_scratchpad(
     on_result: Callable[[str], None],
     on_error: Optional[Callable[[str], None]] = None,
     timeout: int = 20,
+    model: str = "claude-sonnet-4-6",
+    effort: str = "medium",
 ) -> threading.Thread:
     """
     Call Claude CLI to get the updated scratchpad.
@@ -64,8 +67,11 @@ def update_scratchpad(
 
     def _run():
         try:
+            cmd = ["claude", "-p", prompt, "--model", model]
+            if effort in ("low", "high"):
+                cmd += ["--effort", effort]
             result = subprocess.run(
-                ["claude", "-p", prompt],
+                cmd,
                 capture_output=True,
                 text=True,
                 timeout=timeout,

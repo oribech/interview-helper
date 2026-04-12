@@ -14,6 +14,7 @@ import sys
 from src.audio import AudioTranscriber
 from src.brain import Brain
 from src.display import (
+    get_settings,
     send_error,
     send_scratchpad,
     send_transcript,
@@ -66,10 +67,13 @@ def main():
             brain.set_busy(False)
             print(f"[Main] LLM error: {err}")
 
+        settings = get_settings()
         update_scratchpad(
             prompt=prompt,
             on_result=on_result,
             on_error=on_llm_error,
+            model=settings["model"],
+            effort=settings["effort"],
         )
 
     def on_transcript(text: str):
