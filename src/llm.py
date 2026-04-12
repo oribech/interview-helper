@@ -69,9 +69,9 @@ def update_scratchpad(
     def _run():
         try:
             if is_gemini:
-                cmd = ["gemini", "-m", model]
+                cmd = ["gemini", "-p", prompt, "-m", model, "--sandbox=false", "-e", ""]
             else:
-                cmd = ["claude", "-p", prompt, "--model", model]
+                cmd = ["claude", "--no-session-persistence", "-p", prompt, "--model", model]
                 if effort in ("low", "high"):
                     cmd += ["--effort", effort]
 
@@ -80,7 +80,7 @@ def update_scratchpad(
             t0 = time.perf_counter()
             result = subprocess.run(
                 cmd,
-                input=prompt if is_gemini else None,
+                input=None,
                 capture_output=True,
                 text=True,
                 timeout=timeout,
