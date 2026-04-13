@@ -6,6 +6,7 @@ Gemini uses one-shot subprocess with optimized flags.
 """
 
 import json
+import re
 import subprocess
 import threading
 import time
@@ -15,41 +16,50 @@ from typing import Callable, Optional
 
 SCRATCHPAD_PROMPT = """You maintain a real-time interview scratchpad for a Data Science candidate.
 You receive: the current scratchpad content and new conversation transcript.
-Return ONLY the updated scratchpad — nothing else.
+Return ONLY the updated scratchpad. No intro, no explanation, no code fences.
 
-RULES:
-- MAX 8 bullet points
-- Write in CLEAR, PLAIN ENGLISH — not cryptic shorthand
-- Each bullet should be a short sentence that a stressed person can instantly understand
-- Explain the "why" and "how", not just terminology
-- Use → for sub-points (indent with 2 spaces)
-- **Bold** the key answer or term in each bullet
+OPTIMIZE FOR REAL-TIME GLANCEABILITY:
+- First line must be the exact phrase they can say next: `⚡ Say: **...**`
+- Then write 3-6 compact bullets, each with a short label like:
+  `• Step 1: ...`, `• Metric: ...`, `• Why: ...`, `• Pitfall: ...`
+- Keep top-level bullets to ONE short line whenever possible
+- Use indented `  →` lines only for a formula or one critical caveat
+- Prefer fewer bullets over crowded bullets
+
+CONTENT RULES:
+- MAX 8 bullet points total
+- Clear plain English, instantly understandable under stress
+- Explain the answer, not just keywords
+- **Bold** the key answer, term, number, or metric
 - Write formulas in LaTeX using $...$ delimiters
 - Remove stale bullets when the topic changes
-- Use ⚡ prefix for the point they should say RIGHT NOW
-- Think: "what would I whisper to a friend in this interview?"
 
 EXAMPLE OUTPUT:
-⚡ Start by saying: **"First I'd define the success metric"** — e.g. click-through rate
-• Randomize at the **user level**, not query level — avoids inconsistent experience
-• Need at least **2 weeks** to capture weekly behavior patterns
-  → Use power analysis: $n = \\frac{(Z_\\alpha + Z_\\beta)^2 \\cdot 2\\sigma^2}{\\delta^2}$
-• Always set **guardrail metrics** — latency, revenue, crash rate
-• If users influence each other, use **cluster randomization** instead
-• For multiple metrics, correct with **Bonferroni** to avoid false positives"""
+⚡ Say: **"K-means alternates between assigning points and recomputing centroids."**
+• Step 1: **Initialize** with $k$ starting centroids
+• Step 2: **Assign** each point to the nearest centroid
+• Step 3: **Update** each centroid to the mean of its cluster
+• Stop: when assignments stabilize or centroid movement is tiny
+• Pitfall: empty clusters need reinitialization
+  → Distance is usually Euclidean: $d(x, c) = \\sqrt{\\sum_i (x_i - c_i)^2}$"""
 
 
 def build_scratchpad_prompt(
     current_scratchpad: str,
     transcript: str,
+    wiki_context: str = "",
 ) -> str:
     """Build prompt for scratchpad update."""
     parts = [
         SCRATCHPAD_PROMPT,
         "",
         f"<current_scratchpad>\n{current_scratchpad or '(empty)'}\n</current_scratchpad>\n",
-        f"<transcript>\n{transcript}\n</transcript>",
     ]
+
+    if wiki_context.strip():
+        parts.append(f"<wiki_context>\n{wiki_context}\n</wiki_context>\n")
+
+    parts.append(f"<transcript>\n{transcript}\n</transcript>")
 
     return "\n".join(parts)
 
@@ -66,9 +76,11 @@ class ClaudeProcess:
         self._lock = threading.Lock()
         self._model: Optional[str] = None
         self._effort: Optional[str] = None
+        self._primed = False
 
     def _start(self, model: str, effort: str):
         """Spawn the persistent Claude process."""
+        t0 = time.perf_counter()
         cmd = [
             "claude",
             "--input-format", "stream-json",
@@ -88,11 +100,19 @@ class ClaudeProcess:
             stdout=subprocess.PIPE,
             stderr=subprocess.DEVNULL,
             text=True,
+            bufsize=1,
         )
         self._model = model
         self._effort = effort
-        self._first_call = True
-        print("[Claude] Persistent process ready")
+        self._primed = False
+        print(f"[Claude] Persistent process ready in {(time.perf_counter() - t0)*1000:.0f}ms")
+
+    def ensure_started(self, model: str, effort: str):
+        """Ensure a matching Claude process is warm."""
+        with self._lock:
+            if self._needs_restart(model, effort):
+                self.kill()
+                self._start(model, effort)
 
     def _read_response(self, timeout: float = 30.0) -> Optional[str]:
         """Read stdout lines until a result event, return result text."""
@@ -166,6 +186,7 @@ class ClaudeProcess:
             self._proc = None
             self._model = None
             self._effort = None
+            self._primed = False
 
     def send(self, prompt: str, model: str, effort: str, timeout: float = 30.0) -> str:
         """Send a prompt and return the response. Thread-safe."""
@@ -194,7 +215,36 @@ class ClaudeProcess:
                 # Process may have died
                 self.kill()
                 raise RuntimeError("No response from Claude process")
+            self._primed = True
             return result
+
+    def prime(self, model: str, effort: str, timeout: float = 30.0):
+        """Warm the session with a tiny hidden request so the first real answer is faster."""
+        with self._lock:
+            if self._needs_restart(model, effort):
+                self.kill()
+                self._start(model, effort)
+            if self._primed:
+                return
+
+            msg = json.dumps({
+                "type": "user",
+                "message": {"role": "user", "content": "Reply with exactly OK."},
+            })
+            try:
+                self._proc.stdin.write(msg + "\n")
+                self._proc.stdin.flush()
+            except (BrokenPipeError, OSError):
+                self.kill()
+                self._start(model, effort)
+                self._proc.stdin.write(msg + "\n")
+                self._proc.stdin.flush()
+
+            result = self._read_response(timeout=timeout)
+            if result is None:
+                self.kill()
+                raise RuntimeError("Claude warmup request failed")
+            self._primed = True
 
 
 # Global persistent Claude process
@@ -231,6 +281,8 @@ def update_scratchpad(
             else:
                 output = _claude_proc.send(prompt, model, effort, timeout=timeout)
 
+            output = normalize_scratchpad(output)
+
             elapsed = (time.perf_counter() - t0) * 1000
             print(f"[Timing] LLM finished: {elapsed:.0f}ms")
 
@@ -242,6 +294,27 @@ def update_scratchpad(
             print(f"[Timing] LLM error after {elapsed:.0f}ms: {e}")
             if on_error:
                 on_error(f"{provider}: {e}")
+
+    thread = threading.Thread(target=_run, daemon=True)
+    thread.start()
+    return thread
+
+
+def warmup_claude(
+    model: str = "claude-sonnet-4-6",
+    effort: str = "medium",
+) -> Optional[threading.Thread]:
+    """Pre-start the Claude CLI so the first real answer is not a cold start."""
+    if model.startswith("gemini"):
+        return None
+
+    def _run():
+        t0 = time.perf_counter()
+        try:
+            _claude_proc.prime(model, effort)
+            print(f"[Timing] Claude warmup ready: {(time.perf_counter() - t0)*1000:.0f}ms")
+        except Exception as e:
+            print(f"[Claude] Warmup failed: {e}")
 
     thread = threading.Thread(target=_run, daemon=True)
     thread.start()
@@ -263,3 +336,52 @@ def _call_gemini(prompt: str, model: str, timeout: int) -> str:
     if not output:
         raise RuntimeError("Empty response")
     return output
+
+
+def normalize_scratchpad(text: str) -> str:
+    """Clean common model formatting issues so the UI can render predictably."""
+    cleaned = _strip_code_fences((text or "").strip())
+    if not cleaned:
+        return ""
+
+    normalized_lines = []
+    for raw_line in cleaned.splitlines():
+        if not raw_line.strip():
+            continue
+
+        is_subpoint = raw_line.startswith(("  ", "\t"))
+        content = raw_line.strip()
+        content = re.sub(r"^\d+[.)]\s*", "", content)
+
+        if is_subpoint:
+            content = content.lstrip("•-* ").strip()
+            if not content.startswith("→"):
+                content = f"→ {content}"
+            normalized_lines.append(f"  {content}")
+            continue
+
+        content = content.lstrip("># ").strip()
+        if content.startswith(("•", "-", "*")):
+            content = content[1:].strip()
+            content = f"• {content}" if content else ""
+        elif not content.startswith("⚡"):
+            content = f"• {content}"
+
+        if content:
+            normalized_lines.append(content)
+
+    if normalized_lines and not any(line.startswith("⚡") for line in normalized_lines if not line.startswith("  ")):
+        normalized_lines[0] = normalized_lines[0].replace("• ", "⚡ ", 1)
+
+    return "\n".join(normalized_lines)
+
+
+def _strip_code_fences(text: str) -> str:
+    """Remove wrapping markdown fences if the CLI returns them."""
+    if not text.startswith("```"):
+        return text
+
+    lines = text.splitlines()
+    if len(lines) >= 3 and lines[-1].strip() == "```":
+        return "\n".join(lines[1:-1]).strip()
+    return text

@@ -5,10 +5,10 @@ Triggers an update callback on every finalized transcript chunk,
 with debounce to skip if an LLM call is already in-flight.
 """
 
-import time
 import threading
+import time
 from dataclasses import dataclass, field
-from typing import Callable, List
+from typing import Callable, List, Optional
 
 
 @dataclass
@@ -43,39 +43,91 @@ class Brain:
         self._chunks: List[TranscriptChunk] = []
         self._last_trigger_time: float = 0
         self._busy = False  # True when an LLM call is in-flight
+        self._pending = False
+        self._timer: Optional[threading.Timer] = None
         self._lock = threading.Lock()
 
     def add_text(self, text: str):
-        """Add a finalized transcript chunk. Triggers update if not busy."""
-        if not text or not text.strip():
+        """Add a finalized transcript chunk and schedule a fresh update."""
+        cleaned = (text or "").strip()
+        if not cleaned:
             return
 
-        now = time.time()
-        self._chunks.append(TranscriptChunk(text=text.strip(), timestamp=now))
-        self._prune_old_chunks(now)
+        with self._lock:
+            now = time.time()
+            self._chunks.append(TranscriptChunk(text=cleaned, timestamp=now))
+            self._prune_old_chunks(now)
+            self._pending = True
 
-        # Skip if too soon or LLM is busy
-        if now - self._last_trigger_time < self.min_interval_seconds:
-            return
-        if self._busy:
-            print("[Brain] Skipping — LLM still processing")
-            return
-
-        context = self.get_context()
-        self._last_trigger_time = now
-        time_since_chunk = time.time() - now  # time spent in add_text before trigger
-        print(f"[Brain] Triggering update: {text[:60]}...")
-        print(f"[Timing] Brain overhead before trigger: {time_since_chunk*1000:.0f}ms | context length: {len(context)} chars | chunks: {len(self._chunks)}")
-        self.on_update(text.strip(), context)
+        self._schedule_or_trigger()
 
     def set_busy(self, busy: bool):
         """Set/clear the busy flag (called by orchestrator)."""
         with self._lock:
             self._busy = busy
+        if not busy:
+            self._schedule_or_trigger()
 
     def get_context(self) -> str:
         """Get the full rolling context window as a single string."""
-        return " ".join(chunk.text for chunk in self._chunks)
+        with self._lock:
+            return " ".join(chunk.text for chunk in self._chunks)
+
+    def _schedule_or_trigger(self):
+        """Trigger immediately if possible, otherwise schedule the earliest retry."""
+        payload = None
+        delay = None
+
+        with self._lock:
+            if not self._pending or not self._chunks:
+                return
+            if self._busy:
+                return
+
+            now = time.time()
+            remaining = self.min_interval_seconds - (now - self._last_trigger_time)
+
+            if remaining > 0:
+                if self._timer is None or not self._timer.is_alive():
+                    delay = remaining
+            else:
+                self._cancel_timer_locked()
+                self._pending = False
+                self._last_trigger_time = now
+                latest_text = self._chunks[-1].text
+                context = " ".join(chunk.text for chunk in self._chunks)
+                payload = (latest_text, context, len(self._chunks))
+
+        if delay is not None:
+            self._start_timer(delay)
+
+        if payload is not None:
+            latest_text, context, chunk_count = payload
+            print(f"[Brain] Triggering update: {latest_text[:60]}...")
+            print(
+                f"[Timing] Brain dispatch: context length={len(context)} chars | "
+                f"chunks={chunk_count}"
+            )
+            self.on_update(latest_text, context)
+
+    def _start_timer(self, delay: float):
+        timer = threading.Timer(delay, self._timer_fired)
+        timer.daemon = True
+        with self._lock:
+            if self._timer is not None and self._timer.is_alive():
+                return
+            self._timer = timer
+            self._timer.start()
+
+    def _timer_fired(self):
+        with self._lock:
+            self._timer = None
+        self._schedule_or_trigger()
+
+    def _cancel_timer_locked(self):
+        if self._timer is not None:
+            self._timer.cancel()
+            self._timer = None
 
     def _prune_old_chunks(self, now: float):
         """Remove chunks older than the context window."""

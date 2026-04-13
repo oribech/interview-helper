@@ -42,19 +42,22 @@ OVERLAY_HTML = """<!DOCTYPE html>
 
 body {
     font-family: 'Inter', -apple-system, sans-serif;
-    background: #0a0a0f;
+    background:
+        radial-gradient(circle at top, rgba(99, 102, 241, 0.16), transparent 36%),
+        #0a0a0f;
     color: #e2e8f0;
     min-height: 100vh;
     overflow-x: hidden;
 }
 
-/* Header */
 .header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px 20px;
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    gap: 12px;
+    padding: 12px 20px;
+    background: rgba(10, 10, 15, 0.86);
+    backdrop-filter: blur(18px);
     border-bottom: 1px solid rgba(99, 102, 241, 0.2);
     position: sticky;
     top: 0;
@@ -104,16 +107,17 @@ body {
 .status-text {
     font-size: 11px;
     color: #64748b;
+    white-space: nowrap;
 }
 
 .status-text.updating {
     color: #f59e0b;
 }
 
-/* Dropdowns */
 .controls {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
     gap: 10px;
 }
 
@@ -152,53 +156,123 @@ body {
     border-color: #6366f1;
 }
 
-/* Scratchpad */
 .scratchpad {
-    padding: 24px 28px;
-    max-width: 800px;
+    padding: 22px 20px 120px;
+    max-width: 1120px;
     margin: 0 auto;
-    min-height: calc(100vh - 120px);
+    min-height: calc(100vh - 110px);
 }
 
 .pad-content {
-    font-size: 16px;
-    line-height: 2;
-    color: #e2e8f0;
-    letter-spacing: 0.01em;
+    display: grid;
+    gap: 14px;
     transition: opacity 0.15s ease;
 }
 
 .pad-content.updating {
-    opacity: 0.7;
+    opacity: 0.74;
 }
 
-/* Bullet styling */
-.pad-content .line {
-    padding: 4px 0;
-    border-bottom: 1px solid rgba(51, 65, 85, 0.15);
-    transition: all 0.2s ease;
+.lead-card,
+.point-card {
+    border: 1px solid rgba(99, 102, 241, 0.18);
+    background: rgba(15, 23, 42, 0.72);
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.28);
+    transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
 }
 
-.pad-content .line:last-child {
-    border-bottom: none;
+.lead-card {
+    padding: 18px 20px;
+    border-radius: 18px;
+    background:
+        linear-gradient(135deg, rgba(99, 102, 241, 0.22), rgba(17, 24, 39, 0.92)),
+        rgba(15, 23, 42, 0.82);
 }
 
-.pad-content .line.flash {
-    background: rgba(99, 102, 241, 0.08);
-    border-radius: 6px;
-    padding-left: 8px;
-    margin-left: -8px;
+.lead-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.52);
+    color: #f8fafc;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
 }
 
-.pad-content .line.sub {
-    padding-left: 24px;
-    font-size: 14px;
-    color: #94a3b8;
-    border-bottom: none;
-    line-height: 1.8;
+.lead-text {
+    margin-top: 12px;
+    font-size: clamp(26px, 4vw, 40px);
+    line-height: 1.16;
+    font-weight: 700;
+    color: #f8fafc;
+    text-wrap: balance;
 }
 
-/* Empty state */
+.lead-subpoints {
+    margin-top: 12px;
+    display: grid;
+    gap: 8px;
+}
+
+.point-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 12px;
+}
+
+.point-card {
+    padding: 16px;
+    border-radius: 16px;
+}
+
+.point-card.flash,
+.lead-card.flash {
+    border-color: rgba(129, 140, 248, 0.9);
+    background-color: rgba(30, 41, 59, 0.92);
+    transform: translateY(-1px);
+}
+
+.point-label {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 9px;
+    border-radius: 999px;
+    background: rgba(99, 102, 241, 0.15);
+    color: #c7d2fe;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+}
+
+.point-body {
+    margin-top: 10px;
+    font-size: 22px;
+    line-height: 1.28;
+    color: #f8fafc;
+    font-weight: 520;
+}
+
+.subpoint {
+    margin-top: 8px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: rgba(15, 23, 42, 0.66);
+    font-size: 15px;
+    line-height: 1.45;
+    color: #cbd5e1;
+}
+
+.subpoint::before {
+    content: "→";
+    margin-right: 8px;
+    color: #818cf8;
+    font-weight: 700;
+}
+
 .empty-state {
     text-align: center;
     padding: 100px 24px;
@@ -215,23 +289,60 @@ body {
     font-size: 14px;
 }
 
-/* Transcript ticker */
 .transcript-bar {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    background: linear-gradient(180deg, rgba(10, 10, 15, 0) 0%, rgba(10, 10, 15, 0.95) 30%);
-    padding: 28px 20px 12px;
+    padding: 24px 20px 14px;
+    background: linear-gradient(180deg, rgba(10, 10, 15, 0) 0%, rgba(10, 10, 15, 0.97) 30%);
 }
 
 .transcript-text {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 10px 14px;
+    border-radius: 12px;
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid rgba(71, 85, 105, 0.25);
     font-size: 12px;
-    color: #475569;
-    font-style: italic;
-    max-height: 36px;
+    line-height: 1.5;
+    color: #94a3b8;
+    max-height: 58px;
     overflow: hidden;
     font-family: 'JetBrains Mono', monospace;
+}
+
+strong {
+    color: #ffffff;
+    font-weight: 800;
+}
+
+.katex {
+    font-size: 1.02em;
+}
+
+@media (max-width: 720px) {
+    .header {
+        align-items: flex-start;
+    }
+
+    .controls {
+        justify-content: flex-end;
+    }
+
+    .scratchpad {
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+    .point-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .point-body {
+        font-size: 18px;
+    }
 }
 </style>
 </head>
@@ -370,27 +481,31 @@ ws.onmessage = (event) => {
 };
 
 function renderScratchpad(text) {
-    const lines = text.split('\\n').filter(l => l.trim());
-    const newHtml = lines.map((line, i) => {
-        const isSub = line.startsWith('  ');
-        const cleaned = escapeHtml(line.trim());
+    const items = parseScratchpad(text);
+    const signatures = items.map(item => `${item.raw}||${item.subpoints.join('||')}`);
+    const lead = items.length && items[0].raw.startsWith('⚡') ? items.shift() : null;
+    let signatureIndex = 0;
+    const parts = [];
 
-        // Bold markdown
-        const rendered = cleaned.replace(/\\*\\*(.+?)\\*\\*/g, '<strong>$1</strong>');
+    if (lead) {
+        const leadSig = signatures[signatureIndex++];
+        const isNewLead = previousLines[0] !== leadSig;
+        parts.push(renderLeadCard(lead, isNewLead));
+    }
 
-        const cls = isSub ? 'line sub' : 'line';
+    if (items.length) {
+        const cards = items.map(item => {
+            const sig = signatures[signatureIndex];
+            const isNew = previousLines[signatureIndex] !== sig;
+            signatureIndex += 1;
+            return renderPointCard(item, isNew);
+        }).join('');
+        parts.push(`<div class="point-grid">${cards}</div>`);
+    }
 
-        // Flash if this line is new or changed
-        const isNew = !previousLines[i] || previousLines[i] !== line;
-        const flashCls = isNew ? ' flash' : '';
+    padContent.innerHTML = parts.join('');
+    previousLines = signatures;
 
-        return `<div class="${cls}${flashCls}">${rendered}</div>`;
-    }).join('');
-
-    padContent.innerHTML = newHtml;
-    previousLines = lines;
-
-    // Render LaTeX formulas
     if (typeof renderMathInElement === 'function') {
         renderMathInElement(padContent, {
             delimiters: [
@@ -403,12 +518,86 @@ function renderScratchpad(text) {
         });
     }
 
-    // Remove flash after animation
     setTimeout(() => {
-        document.querySelectorAll('.line.flash').forEach(el => {
+        document.querySelectorAll('.flash').forEach(el => {
             el.classList.remove('flash');
         });
     }, 1500);
+}
+
+function parseScratchpad(text) {
+    const items = [];
+    let current = null;
+
+    text.split('\\n').forEach(rawLine => {
+        if (!rawLine.trim()) return;
+
+        const isSubpoint = rawLine.startsWith('  ') || rawLine.startsWith('\\t');
+        const trimmed = rawLine.trim();
+
+        if (isSubpoint || trimmed.startsWith('→')) {
+            if (current) {
+                current.subpoints.push(trimmed.replace(/^→\\s*/, ''));
+            }
+            return;
+        }
+
+        current = {raw: trimmed, subpoints: []};
+        items.push(current);
+    });
+
+    return items;
+}
+
+function renderLeadCard(item, isNew) {
+    const {label, body} = splitLabel(stripMarker(item.raw));
+    const eyebrow = label || 'Say next';
+    const leadText = body || stripMarker(item.raw);
+    const subpoints = item.subpoints.length
+        ? `<div class="lead-subpoints">${item.subpoints.map(renderSubpoint).join('')}</div>`
+        : '';
+
+    return `
+        <section class="lead-card${isNew ? ' flash' : ''}">
+            <div class="lead-eyebrow">⚡ ${renderInline(eyebrow)}</div>
+            <div class="lead-text">${renderInline(leadText)}</div>
+            ${subpoints}
+        </section>
+    `;
+}
+
+function renderPointCard(item, isNew) {
+    const stripped = stripMarker(item.raw);
+    const {label, body} = splitLabel(stripped);
+    const cardBody = body || stripped;
+    const chip = label ? `<div class="point-label">${renderInline(label)}</div>` : '';
+    const subpoints = item.subpoints.map(renderSubpoint).join('');
+
+    return `
+        <article class="point-card${isNew ? ' flash' : ''}">
+            ${chip}
+            <div class="point-body">${renderInline(cardBody)}</div>
+            ${subpoints}
+        </article>
+    `;
+}
+
+function renderSubpoint(text) {
+    return `<div class="subpoint">${renderInline(text)}</div>`;
+}
+
+function splitLabel(text) {
+    const match = text.match(/^([^:]{1,24}):\\s*(.+)$/);
+    if (!match) return {label: '', body: text};
+    return {label: match[1].trim(), body: match[2].trim()};
+}
+
+function stripMarker(text) {
+    return text.replace(/^⚡\\s*/, '').replace(/^•\\s*/, '').trim();
+}
+
+function renderInline(text) {
+    return escapeHtml(text).replace(/\\*\\*(.+?)\\*\\*/g, '<strong>$1</strong>');
 }
 
 function escapeHtml(text) {

@@ -69,7 +69,7 @@ def test_brain_triggers():
 
 
 def test_brain_busy_guard():
-    """Test that brain skips triggers when busy."""
+    """Test that busy mode defers work instead of dropping it."""
     print("\n=== Test: Brain Busy Guard ===")
 
     triggered = []
@@ -87,9 +87,13 @@ def test_brain_busy_guard():
     print("  Busy guard blocked all triggers ✓")
 
     brain.set_busy(False)
+    time.sleep(0.06)
+    assert len(triggered) == 1, f"Expected deferred trigger after unbusy, got {len(triggered)}"
+    print("  Pending update flushed after unbusy ✓")
+
     brain.add_text("Now I should trigger")
     time.sleep(0.06)
-    assert len(triggered) == 1, f"Expected 1 trigger after unbusy, got {len(triggered)}"
+    assert len(triggered) == 2, f"Expected 2 triggers after new text, got {len(triggered)}"
     print("  Trigger resumed after unbusy ✓")
     print("  ✅ PASSED")
 

@@ -20,10 +20,11 @@ from src.display import (
     send_scratchpad,
     send_transcript,
     send_updating,
+    set_on_settings_change,
     set_on_stt_change,
     start_server,
 )
-from src.llm import build_scratchpad_prompt, update_scratchpad
+from src.llm import build_scratchpad_prompt, update_scratchpad, warmup_claude
 
 
 
@@ -90,11 +91,15 @@ def main():
         """Partial transcript → update ticker on display."""
         send_transcript(text)
 
+    def on_settings_change(settings: dict):
+        """Warm the selected Claude model in the background."""
+        warmup_claude(settings["model"], settings["effort"])
+
     # --- Components ---
 
     brain = Brain(
         on_update=on_brain_update,
-        min_interval_seconds=3.0,
+        min_interval_seconds=1.5,
     )
 
     audio = AudioTranscriber(
@@ -108,7 +113,9 @@ def main():
 
     async def run():
         runner = await start_server(port=args.port)
+        set_on_settings_change(on_settings_change)
         set_on_stt_change(lambda model: audio.change_model(model))
+        warmup_claude(get_settings()["model"], get_settings()["effort"])
         audio.start()
 
         print(f"\n{'='*50}")
