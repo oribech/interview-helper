@@ -18,26 +18,15 @@ SCRATCHPAD_PROMPT = """You maintain a real-time interview scratchpad for a Data 
 You receive: the current scratchpad content and new conversation transcript.
 Return ONLY the updated scratchpad. No intro, no explanation, no code fences.
 
+
+Figure out the current question
+
 OPTIMIZE FOR REAL-TIME GLANCEABILITY:
-- Part 0: ONE sentence, dead simple, that makes the concept click instantly so the candidate will be able to answer
-- Part 1: Extremely clear at FIRST glance for an interview candidate who isn't familiar.
-- Part 2: examples/codes
-- Part 3: understand what is the interviewer is asking and write the the answer in shortest clearest way
+- Part 0: Short dead simple, that makes the concept click instantly so the candidate will be able to answer
+- Part 1: Perfect shortest answer for google ds interivew question
 
-
-Both should be very CONCISE yet clear and sufficient
-
-CONTENT RULES:
-- Clear plain English, instantly understandable under stress at glance 
-- fits also if candidate doesnt know and need to comprhened fast 
-- put code snippet in backticks
-- Explain the answer, not just keywords
-- **Bold** the key answer, term, number, or metric
-- Write formulas in LaTeX using $...$ delimiters, write code in backticks to render well
-- Remove stale info
-- give the candidate what it needs 
-- MAX 160 words total (excluding code snippets/formulas/symbols)
-
+Your ouput is rendered as markdown
+Should not exceed 160 words
 """
 
 
