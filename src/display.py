@@ -18,7 +18,7 @@ _loop = None
 
 # Current settings (updated by client dropdowns)
 _settings: dict = {"model": "claude-sonnet-4-6", "effort": "medium"}
-_stt_settings: dict = {"stt_model": "small"}
+_stt_settings: dict = {"stt_model": "medium"}
 
 # External callback for STT model changes
 _on_stt_change = None
@@ -37,6 +37,7 @@ OVERLAY_HTML = """<!DOCTYPE html>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -162,9 +163,8 @@ body {
 
 .pad-content {
     font-size: 16px;
-    line-height: 2;
+    line-height: 1.8;
     color: #e2e8f0;
-    letter-spacing: 0.01em;
     transition: opacity 0.15s ease;
 }
 
@@ -172,30 +172,81 @@ body {
     opacity: 0.7;
 }
 
-/* Bullet styling */
-.pad-content .line {
-    padding: 4px 0;
-    border-bottom: 1px solid rgba(51, 65, 85, 0.15);
-    transition: all 0.2s ease;
+.pad-content.flash {
+    animation: flashBg 1.5s ease;
 }
 
-.pad-content .line:last-child {
-    border-bottom: none;
+@keyframes flashBg {
+    0% { background: rgba(99, 102, 241, 0.08); }
+    100% { background: transparent; }
 }
 
-.pad-content .line.flash {
-    background: rgba(99, 102, 241, 0.08);
-    border-radius: 6px;
-    padding-left: 8px;
-    margin-left: -8px;
+.pad-content p {
+    margin: 6px 0;
 }
 
-.pad-content .line.sub {
-    padding-left: 24px;
+.pad-content ul, .pad-content ol {
+    margin: 4px 0;
+    padding-left: 20px;
+}
+
+.pad-content li {
+    margin: 3px 0;
+}
+
+.pad-content strong {
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.pad-content em {
+    color: #c7d2fe;
+    font-style: italic;
+}
+
+.pad-content code {
+    background: rgba(99, 102, 241, 0.15);
+    color: #a5b4fc;
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9em;
+}
+
+.pad-content pre {
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin: 6px 0;
+    overflow-x: auto;
+    line-height: 1.5;
+}
+
+.pad-content pre code {
+    background: none;
+    padding: 0;
+    border-radius: 0;
+    font-size: 13px;
+    color: #e2e8f0;
+}
+
+.pad-content table {
+    border-collapse: collapse;
+    margin: 6px 0;
     font-size: 14px;
-    color: #94a3b8;
-    border-bottom: none;
-    line-height: 1.8;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.pad-content th, .pad-content td {
+    padding: 4px 10px;
+    border: 1px solid rgba(99, 102, 241, 0.25);
+}
+
+.pad-content th {
+    background: rgba(99, 102, 241, 0.12);
+    color: #c7d2fe;
+    font-weight: 600;
 }
 
 /* Empty state */
@@ -251,8 +302,8 @@ body {
             <select id="sttSelect">
                 <option value="tiny">Tiny</option>
                 <option value="base">Base</option>
-                <option value="small" selected>Small</option>
-                <option value="medium">Medium</option>
+                <option value="small">Small</option>
+                <option value="medium" selected>Medium</option>
                 <option value="large-v2">Large</option>
             </select>
         </div>
@@ -306,7 +357,7 @@ const modelSelect = document.getElementById('modelSelect');
 const effortSelect = document.getElementById('effortSelect');
 const sttSelect = document.getElementById('sttSelect');
 
-let previousLines = [];
+let previousText = '';
 
 const effortGroup = effortSelect.parentElement;
 
@@ -370,52 +421,32 @@ ws.onmessage = (event) => {
 };
 
 function renderScratchpad(text) {
-    const lines = text.split('\\n').filter(l => l.trim());
-    const newHtml = lines.map((line, i) => {
-        const isSub = line.startsWith('  ');
-        const cleaned = escapeHtml(line.trim());
+    const html = marked.parse(text);
+    const isNew = text !== previousText;
+    padContent.innerHTML = html;
+    previousText = text;
 
-        // Bold markdown
-        const rendered = cleaned.replace(/\\*\\*(.+?)\\*\\*/g, '<strong>$1</strong>');
-
-        const cls = isSub ? 'line sub' : 'line';
-
-        // Flash if this line is new or changed
-        const isNew = !previousLines[i] || previousLines[i] !== line;
-        const flashCls = isNew ? ' flash' : '';
-
-        return `<div class="${cls}${flashCls}">${rendered}</div>`;
-    }).join('');
-
-    padContent.innerHTML = newHtml;
-    previousLines = lines;
-
-    // Render LaTeX formulas
-    if (typeof renderMathInElement === 'function') {
-        renderMathInElement(padContent, {
-            delimiters: [
-                {left: '$$', right: '$$', display: true},
-                {left: '$', right: '$', display: false},
-                {left: '\\\\(', right: '\\\\)', display: false},
-                {left: '\\\\[', right: '\\\\]', display: true},
-            ],
-            throwOnError: false,
-        });
+    if (isNew) {
+        padContent.classList.add('flash');
+        setTimeout(() => padContent.classList.remove('flash'), 1500);
     }
 
-    // Remove flash after animation
-    setTimeout(() => {
-        document.querySelectorAll('.line.flash').forEach(el => {
-            el.classList.remove('flash');
+    // Render LaTeX (skip code blocks)
+    if (typeof renderMathInElement === 'function') {
+        padContent.querySelectorAll('p, li, td, th').forEach(el => {
+            renderMathInElement(el, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false},
+                    {left: '\\\\(', right: '\\\\)', display: false},
+                    {left: '\\\\[', right: '\\\\]', display: true},
+                ],
+                throwOnError: false,
+            });
         });
-    }, 1500);
+    }
 }
 
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
 </script>
 </body>
 </html>"""
@@ -526,7 +557,7 @@ def reset():
     _on_settings_change = None
     _on_stt_change = None
     _settings.update({"model": "claude-sonnet-4-6", "effort": "medium"})
-    _stt_settings.update({"stt_model": "small"})
+    _stt_settings.update({"stt_model": "medium"})
 
 
 async def start_server(host: str = "0.0.0.0", port: int = 8888):

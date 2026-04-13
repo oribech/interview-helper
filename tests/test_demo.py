@@ -107,8 +107,8 @@ def test_scratchpad_prompt():
     )
 
     assert "current_scratchpad" in prompt
-    assert "transcript" in prompt
-    assert "MAX 8 bullet" in prompt
+    assert "new_transcript" in prompt
+    assert "GLANCEABILITY" in prompt
     assert MOCK_SCRATCHPAD_V1 in prompt
 
     print(f"  Prompt length: {len(prompt)} chars")

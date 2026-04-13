@@ -41,6 +41,7 @@ class Brain:
         self.min_interval_seconds = min_interval_seconds
 
         self._chunks: List[TranscriptChunk] = []
+        self._unsent: List[str] = []  # chunks not yet sent to LLM
         self._last_trigger_time: float = 0
         self._busy = False  # True when an LLM call is in-flight
         self._pending = False
@@ -56,6 +57,7 @@ class Brain:
         with self._lock:
             now = time.time()
             self._chunks.append(TranscriptChunk(text=cleaned, timestamp=now))
+            self._unsent.append(cleaned)
             self._prune_old_chunks(now)
             self._pending = True
 
@@ -94,21 +96,22 @@ class Brain:
                 self._cancel_timer_locked()
                 self._pending = False
                 self._last_trigger_time = now
-                latest_text = self._chunks[-1].text
+                delta_text = " ".join(self._unsent)
+                self._unsent.clear()
                 context = " ".join(chunk.text for chunk in self._chunks)
-                payload = (latest_text, context, len(self._chunks))
+                payload = (delta_text, context, len(self._chunks))
 
         if delay is not None:
             self._start_timer(delay)
 
         if payload is not None:
-            latest_text, context, chunk_count = payload
-            print(f"[Brain] Triggering update: {latest_text[:60]}...")
+            delta_text, context, chunk_count = payload
+            print(f"[Brain] Triggering update (delta): {delta_text[:60]}...")
             print(
-                f"[Timing] Brain dispatch: context length={len(context)} chars | "
-                f"chunks={chunk_count}"
+                f"[Timing] Brain dispatch: delta={len(delta_text)} chars | "
+                f"total context={len(context)} chars | chunks={chunk_count}"
             )
-            self.on_update(latest_text, context)
+            self.on_update(delta_text, context)
 
     def _start_timer(self, delay: float):
         timer = threading.Timer(delay, self._timer_fired)

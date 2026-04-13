@@ -19,47 +19,47 @@ You receive: the current scratchpad content and new conversation transcript.
 Return ONLY the updated scratchpad. No intro, no explanation, no code fences.
 
 OPTIMIZE FOR REAL-TIME GLANCEABILITY:
-- First line must be the exact phrase they can say next: `⚡ Say: **...**`
-- Then write 3-6 compact bullets, each with a short label like:
-  `• Step 1: ...`, `• Metric: ...`, `• Why: ...`, `• Pitfall: ...`
-- Keep top-level bullets to ONE short line whenever possible
-- Use indented `  →` lines only for a formula or one critical caveat
-- Prefer fewer bullets over crowded bullets
+- Part 0: ONE sentence, dead simple, that makes the concept click instantly so the candidate will be able to answer
+- Part 1: Extremely clear at FIRST glance for an interview candidate who isn't familiar.
+- Part 2: examples/codes
+- Part 3: understand what is the interviewer is asking and write the the answer in shortest clearest way
+
+
+Both should be very CONCISE yet clear and sufficient
 
 CONTENT RULES:
-- MAX 8 bullet points total
-- Clear plain English, instantly understandable under stress
+- Clear plain English, instantly understandable under stress at glance 
+- fits also if candidate doesnt know and need to comprhened fast 
+- put code snippet in backticks
 - Explain the answer, not just keywords
 - **Bold** the key answer, term, number, or metric
-- Write formulas in LaTeX using $...$ delimiters
-- Remove stale bullets when the topic changes
+- Write formulas in LaTeX using $...$ delimiters, write code in backticks to render well
+- Remove stale info
+- give the candidate what it needs 
+- MAX 160 words total (excluding code snippets/formulas/symbols)
 
-EXAMPLE OUTPUT:
-⚡ Say: **"K-means alternates between assigning points and recomputing centroids."**
-• Step 1: **Initialize** with $k$ starting centroids
-• Step 2: **Assign** each point to the nearest centroid
-• Step 3: **Update** each centroid to the mean of its cluster
-• Stop: when assignments stabilize or centroid movement is tiny
-• Pitfall: empty clusters need reinitialization
-  → Distance is usually Euclidean: $d(x, c) = \\sqrt{\\sum_i (x_i - c_i)^2}$"""
+"""
 
 
 def build_scratchpad_prompt(
     current_scratchpad: str,
     transcript: str,
-    wiki_context: str = "",
+    include_system: bool = True,
 ) -> str:
-    """Build prompt for scratchpad update."""
-    parts = [
-        SCRATCHPAD_PROMPT,
-        "",
-        f"<current_scratchpad>\n{current_scratchpad or '(empty)'}\n</current_scratchpad>\n",
-    ]
+    """Build prompt for scratchpad update.
 
-    if wiki_context.strip():
-        parts.append(f"<wiki_context>\n{wiki_context}\n</wiki_context>\n")
+    Args:
+        include_system: True for the first call in a session (sends system prompt).
+                        False for subsequent calls (sends only new transcript delta).
+    """
+    parts = []
 
-    parts.append(f"<transcript>\n{transcript}\n</transcript>")
+    if include_system:
+        parts.append(SCRATCHPAD_PROMPT)
+        parts.append("")
+
+    parts.append(f"<current_scratchpad>\n{current_scratchpad or '(empty)'}\n</current_scratchpad>\n")
+    parts.append(f"<new_transcript>\n{transcript}\n</new_transcript>")
 
     return "\n".join(parts)
 
@@ -77,6 +77,7 @@ class ClaudeProcess:
         self._model: Optional[str] = None
         self._effort: Optional[str] = None
         self._primed = False
+        self._system_sent = False  # True after first real prompt with system instructions
 
     def _start(self, model: str, effort: str):
         """Spawn the persistent Claude process."""
@@ -187,6 +188,7 @@ class ClaudeProcess:
             self._model = None
             self._effort = None
             self._primed = False
+            self._system_sent = False
 
     def send(self, prompt: str, model: str, effort: str, timeout: float = 30.0) -> str:
         """Send a prompt and return the response. Thread-safe."""
@@ -256,7 +258,9 @@ _claude_proc = ClaudeProcess()
 # ---------------------------------------------------------------------------
 
 def update_scratchpad(
-    prompt: str,
+    current_scratchpad: str,
+    new_transcript: str,
+    full_transcript: str,
     on_result: Callable[[str], None],
     on_error: Optional[Callable[[str], None]] = None,
     timeout: int = 30,
@@ -265,10 +269,20 @@ def update_scratchpad(
 ) -> threading.Thread:
     """
     Send prompt to LLM and call on_result with the response.
-    Claude: persistent process (fast). Gemini: one-shot subprocess.
+
+    Claude: persistent session — system prompt sent once, then deltas.
+    Gemini: stateless one-shot — always gets full context + system prompt.
     """
 
     is_gemini = model.startswith("gemini")
+
+    # Build the right prompt for each provider
+    if is_gemini:
+        prompt = build_scratchpad_prompt(current_scratchpad, full_transcript, include_system=True)
+    else:
+        include_system = not _claude_proc._system_sent
+        transcript = full_transcript if include_system else new_transcript
+        prompt = build_scratchpad_prompt(current_scratchpad, transcript, include_system=include_system)
 
     def _run():
         provider = "Gemini" if is_gemini else "Claude"
@@ -280,6 +294,7 @@ def update_scratchpad(
                 output = _call_gemini(prompt, model, timeout)
             else:
                 output = _claude_proc.send(prompt, model, effort, timeout=timeout)
+                _claude_proc._system_sent = True
 
             output = normalize_scratchpad(output)
 
@@ -322,10 +337,11 @@ def warmup_claude(
 
 
 def _call_gemini(prompt: str, model: str, timeout: int) -> str:
-    """One-shot Gemini CLI call with optimized flags."""
-    cmd = ["gemini", "-p", prompt, "-m", model, "--sandbox=false", "-e", ""]
+    """One-shot Gemini CLI call — pipes prompt via stdin to avoid arg-length limits."""
+    cmd = ["gemini", "-m", model, "--sandbox=false", "-e", ""]
     result = subprocess.run(
         cmd,
+        input=prompt,
         capture_output=True,
         text=True,
         timeout=timeout,
@@ -339,45 +355,15 @@ def _call_gemini(prompt: str, model: str, timeout: int) -> str:
 
 
 def normalize_scratchpad(text: str) -> str:
-    """Clean common model formatting issues so the UI can render predictably."""
-    cleaned = _strip_code_fences((text or "").strip())
-    if not cleaned:
-        return ""
+    """Strip outer code fence if the CLI wraps the response in one.
 
-    normalized_lines = []
-    for raw_line in cleaned.splitlines():
-        if not raw_line.strip():
-            continue
-
-        is_subpoint = raw_line.startswith(("  ", "\t"))
-        content = raw_line.strip()
-        content = re.sub(r"^\d+[.)]\s*", "", content)
-
-        if is_subpoint:
-            content = content.lstrip("•-* ").strip()
-            if not content.startswith("→"):
-                content = f"→ {content}"
-            normalized_lines.append(f"  {content}")
-            continue
-
-        content = content.lstrip("># ").strip()
-        if content.startswith(("•", "-", "*")):
-            content = content[1:].strip()
-            content = f"• {content}" if content else ""
-        elif not content.startswith("⚡"):
-            content = f"• {content}"
-
-        if content:
-            normalized_lines.append(content)
-
-    if normalized_lines and not any(line.startswith("⚡") for line in normalized_lines if not line.startswith("  ")):
-        normalized_lines[0] = normalized_lines[0].replace("• ", "⚡ ", 1)
-
-    return "\n".join(normalized_lines)
+    Otherwise pass markdown through untouched — marked.js handles rendering.
+    """
+    return _strip_outer_fence((text or "").strip())
 
 
-def _strip_code_fences(text: str) -> str:
-    """Remove wrapping markdown fences if the CLI returns them."""
+def _strip_outer_fence(text: str) -> str:
+    """Remove wrapping markdown fences if the CLI returns the whole response in one."""
     if not text.startswith("```"):
         return text
 

@@ -24,7 +24,7 @@ from src.display import (
     set_on_stt_change,
     start_server,
 )
-from src.llm import build_scratchpad_prompt, update_scratchpad, warmup_claude
+from src.llm import update_scratchpad, warmup_claude
 
 
 
@@ -42,20 +42,12 @@ def main():
     # --- Callbacks ---
 
     def on_brain_update(new_text: str, full_context: str):
-        """Brain has new transcript → ask Claude to update scratchpad."""
+        """Brain has new transcript → ask LLM to update scratchpad."""
         global _current_scratchpad
 
         t_start = time.perf_counter()
         brain.set_busy(True)
         send_updating()
-
-        # Build prompt
-        t_prompt = time.perf_counter()
-        prompt = build_scratchpad_prompt(
-            current_scratchpad=_current_scratchpad,
-            transcript=full_context,
-        )
-        print(f"[Timing] Prompt build: {(time.perf_counter() - t_prompt)*1000:.0f}ms  (prompt length: {len(prompt)} chars)")
 
         def on_result(new_pad: str):
             global _current_scratchpad
@@ -76,7 +68,9 @@ def main():
         settings = get_settings()
         print(f"[Timing] Settings: model={settings['model']}, effort={settings['effort']}")
         update_scratchpad(
-            prompt=prompt,
+            current_scratchpad=_current_scratchpad,
+            new_transcript=new_text,
+            full_transcript=full_context,
             on_result=on_result,
             on_error=on_llm_error,
             model=settings["model"],
