@@ -50,6 +50,20 @@ Settings are sent to the server via WebSocket and take effect on the next LLM ca
 - **Bold** key terms, numbers; formulas in LaTeX (`$...$`)
 - Stale bullets removed when topic changes
 
+## Changelog
+
+After every code modification, append an entry to `CHANGELOG.md` using concise [Conventional Commits](https://www.conventionalcommits.org/) format:
+
+```
+## YYYY-MM-DD
+- fix(scope): short description
+- feat(scope): short description
+- test(scope): short description
+- refactor(scope): short description
+```
+
+One line per change. Group by date. Scope = affected module (brain, llm, display, tests, etc.).
+
 ## Conventions
 
 - Python: `uv run python <file>`

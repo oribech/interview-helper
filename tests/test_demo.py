@@ -14,7 +14,6 @@ import threading
 
 from src.brain import Brain
 from src.llm import build_scratchpad_prompt
-from src.wiki_search import search_wiki
 
 
 # ============================================================================
@@ -102,22 +101,18 @@ def test_scratchpad_prompt():
     """Test prompt building for scratchpad."""
     print("\n=== Test: Scratchpad Prompt ===")
 
-    wiki = search_wiki("A/B test experiment design")
     prompt = build_scratchpad_prompt(
         current_scratchpad=MOCK_SCRATCHPAD_V1,
         transcript="How would you design an A/B test?",
-        wiki_context=wiki,
     )
 
     assert "current_scratchpad" in prompt
     assert "transcript" in prompt
-    assert "wiki_context" in prompt
     assert "MAX 8 bullet" in prompt
     assert MOCK_SCRATCHPAD_V1 in prompt
 
     print(f"  Prompt length: {len(prompt)} chars")
     print(f"  Contains scratchpad: ✓")
-    print(f"  Contains wiki: ✓")
     print(f"  Contains glanceability rules: ✓")
     print("  ✅ PASSED")
 
